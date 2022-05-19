@@ -30,7 +30,7 @@ func Start() {
 	// Storing our id from u to BotId .
 	BotId = u.ID
 
-	// Adding handler function to handle our messages using AddHandler from discordgo package. We will declare messageHandler function later.
+	// Adding handler function to handle our messages using AddHandler from discordgo package.
 	goBot.AddHandler(messageHandler)
 
 	err = goBot.Open()
