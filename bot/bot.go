@@ -1,8 +1,11 @@
 package bot
 
 import (
-	"discord-go-bot/config" //	importing our config package which we have created above
-	"fmt"                   //	to print errors
+	gophers "discord-go-bot/bot/images"      // importing the gophers pachage
+	dgwidgets "discord-go-bot/bot/paginator" // importing the dgwidgets pachage
+	"discord-go-bot/config"                  //	importing our config package which we have created above
+	"fmt"                                    //	to print errors
+	"time"
 
 	"github.com/bwmarrin/discordgo" // discordgo package from the repo of bwmarrin .
 )
@@ -56,4 +59,54 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Content == config.BotPrefix+"pong" {
 		_, _ = s.ChannelMessageSend(m.ChannelID, "ping!")
 	}
+
+	if m.Content == config.BotPrefix+"gopher" {
+		p := dgwidgets.NewPaginator(s, m.ChannelID)
+
+		// Add embed pages to paginator
+
+		// returning values of gophersImages and gophersUrl from images/gophers.go
+		gopherImages, gophersUrl := gophers.Gophers()
+
+		for i := 0; i < len(gopherImages); i++ {
+			gopherName := fmt.Sprintf("Image %d: %s", i+1, gopherImages[i])
+			p.Add(&discordgo.MessageEmbed{
+				Title:       "Collectionof Gopher Images",
+				Description: gopherName,
+				Image:       &discordgo.MessageEmbedImage{URL: gophersUrl[i]},
+			})
+		}
+
+		// p.Add(&discordgo.MessageEmbed{Description: "Page one"},
+		// 	&discordgo.MessageEmbed{Description: "Page two"},
+		// 	&discordgo.MessageEmbed{Description: "Page three"})
+
+		// Sets the footers of all added pages to their page numbers.
+		p.SetPageFooters()
+
+		// When the paginator is done listening set the colour to yellow
+		p.ColourWhenDone = 0xffff
+
+		// Stop listening for reaction events after five minutes
+		p.Widget.Timeout = time.Minute * 5
+
+		// Add a custom handler for the gun reaction.
+		p.Widget.Handle("🔫", func(w *dgwidgets.Widget, r *discordgo.MessageReaction) {
+			s.ChannelMessageSend(m.ChannelID, "Bang!")
+		})
+
+		p.Spawn()
+	}
+
+	if m.Content == config.BotPrefix+"help" {
+
+		helpEmbed := &discordgo.MessageEmbed{
+			Title:       "Bot Commands",
+			Description: "`!ping` to ping the bot\n`!pong` to pong the bot\n`!gopher` to show embed pages with Gopher image",
+			Color:       3699351, // hex color to decimal
+		}
+
+		_, _ = s.ChannelMessageSendEmbed(m.ChannelID, helpEmbed)
+	}
+
 }
