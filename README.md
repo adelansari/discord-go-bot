@@ -23,10 +23,9 @@ You can run the bot normally using either of the following:
 
 ### Commands
 ```
-!ping - pong
-
-soon
-soon
-soon
+!help    -  A list of help commands.
+!ping    -  To ping the bot!
+!pong    -  To pong the bot!
+!gopher  -  To show pages of Gopher images in an embed
 
 ```
