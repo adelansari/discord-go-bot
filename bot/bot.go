@@ -101,9 +101,12 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Content == config.BotPrefix+"help" {
 
 		helpEmbed := &discordgo.MessageEmbed{
-			Title:       "Bot Commands",
-			Description: "`!ping` to ping the bot\n`!pong` to pong the bot\n`!gopher` to show embed pages with Gopher image",
-			Color:       3699351, // hex color to decimal
+			Title: "Bot Commands",
+			Description: fmt.Sprintf("`!help`    -  A list of help commands\n" +
+				"`!ping`    -  To ping the bot!\n" +
+				"`!pong`    -  To pong the bot!\n" +
+				"`!gopher`  -  To show pages of Gopher images in an embed"),
+			Color: 3699351, // hex color to decimal
 		}
 
 		_, _ = s.ChannelMessageSendEmbed(m.ChannelID, helpEmbed)

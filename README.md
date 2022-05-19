@@ -14,6 +14,7 @@ Creating a discord bot using Go lang
 
 
 ### Starting
+First install Go from [here](https://go.dev/dl/).  
 For the first time:
 - `go build main.go `
 
