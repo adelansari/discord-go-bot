@@ -50,7 +50,10 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 	//If we message ping to our bot in our discord it will return us pong .
-	if m.Content == "ping" {
-		_, _ = s.ChannelMessageSend(m.ChannelID, "pong")
+	if m.Content == config.BotPrefix+"ping" {
+		_, _ = s.ChannelMessageSend(m.ChannelID, "pong!")
+	}
+	if m.Content == config.BotPrefix+"pong" {
+		_, _ = s.ChannelMessageSend(m.ChannelID, "ping!")
 	}
 }
