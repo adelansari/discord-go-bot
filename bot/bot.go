@@ -63,7 +63,7 @@ func Start() {
 //Definition of messageHandler function it takes two arguments first one is discordgo.Session which is s , second one is discordgo.MessageCreate which is m.
 func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 
-	BotPrefix := os.Getenv("PREFIX")
+	BotPrefix := "!"
 
 	//Bot musn't reply to it's own messages , to confirm it we perform this check.
 	if m.Author.ID == BotId {

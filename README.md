@@ -4,12 +4,9 @@ Creating a discord bot using Go lang
 
 ### Setup
 - Create a discord application and bot using [this link](https://discord.com/developers/applications)
-- Create a `config.json` file in the root. It should include:
+- Create a `.env` file in the root. It should include:
 ```
-{
-"Token"  : "PlaceYourDiscordBotTokenHere",
-"BotPrefix" : "!"
-}
+TOKEN=PlaceYourDiscordBotTokenHere
 ```
 
 
