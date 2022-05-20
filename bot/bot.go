@@ -1,10 +1,10 @@
 package bot
 
 import (
-	gophers "discord-go-bot/bot/images"      // importing the gophers pachage
-	dgwidgets "discord-go-bot/bot/paginator" // importing the dgwidgets pachage
-	"discord-go-bot/config"                  //	importing our config package which we have created above
-	"fmt"                                    //	to print errors
+	commands "discord-go-bot/bot/src/commands"         // importing the gophers pachage
+	paginator "discord-go-bot/bot/src/utils/paginator" // importing the paginator pachage
+	"discord-go-bot/config"                            //	importing our config package which we have created above
+	"fmt"                                              //	to print errors
 	"time"
 
 	"github.com/bwmarrin/discordgo" // discordgo package from the repo of bwmarrin .
@@ -61,12 +61,12 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	if m.Content == config.BotPrefix+"gopher" {
-		p := dgwidgets.NewPaginator(s, m.ChannelID)
+		p := paginator.NewPaginator(s, m.ChannelID)
 
 		// Add embed pages to paginator
 
 		// returning values of gophersImages and gophersUrl from images/gophers.go
-		gopherImages, gophersUrl := gophers.Gophers()
+		gopherImages, gophersUrl := commands.Gophers()
 
 		for i := 0; i < len(gopherImages); i++ {
 			gopherName := fmt.Sprintf("Image %d: %s", i+1, gopherImages[i])
@@ -91,7 +91,7 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		p.Widget.Timeout = time.Minute * 5
 
 		// Add a custom handler for the gun reaction.
-		p.Widget.Handle("🔫", func(w *dgwidgets.Widget, r *discordgo.MessageReaction) {
+		p.Widget.Handle("🔫", func(w *paginator.Widget, r *discordgo.MessageReaction) {
 			s.ChannelMessageSend(m.ChannelID, "Bang!")
 		})
 
@@ -100,15 +100,7 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if m.Content == config.BotPrefix+"help" {
 
-		helpEmbed := &discordgo.MessageEmbed{
-			Title: "Bot Commands",
-			Description: fmt.Sprintf("`!help`    -  A list of help commands\n" +
-				"`!ping`    -  To ping the bot!\n" +
-				"`!pong`    -  To pong the bot!\n" +
-				"`!gopher`  -  To show pages of Gopher images in an embed"),
-			Color: 3699351, // hex color to decimal
-		}
-
+		helpEmbed := commands.Help()
 		_, _ = s.ChannelMessageSendEmbed(m.ChannelID, helpEmbed)
 	}
 

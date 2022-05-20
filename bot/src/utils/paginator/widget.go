@@ -1,4 +1,4 @@
-package dgwidgets
+package paginator
 
 import (
 	"errors"

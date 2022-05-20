@@ -1,4 +1,4 @@
-package gophers
+package commands
 
 func Gophers() ([]string, []string) {
 	gophersImages := []string{
