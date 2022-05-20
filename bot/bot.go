@@ -1,7 +1,7 @@
 package bot
 
 import (
-	commands "discord-go-bot/bot/src/commands"         // importing the gophers pachage
+	commands "discord-go-bot/bot/src/commands"         // importing commands pachage
 	paginator "discord-go-bot/bot/src/utils/paginator" // importing the paginator pachage
 	"discord-go-bot/config"                            //	importing our config package which we have created above
 	"fmt"                                              //	to print errors
