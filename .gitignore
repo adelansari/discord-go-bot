@@ -16,3 +16,4 @@
 
 # Bot tokens
 config.json
+.env

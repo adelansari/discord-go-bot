@@ -1,19 +1,33 @@
 package bot
 
 import (
-	"discord-go-bot/bot/src/commands"      // importing commands pachage
-	"fmt"                                    //	to print errors
-  "os"
-  
+	"discord-go-bot/bot/src/commands" // importing commands pachage
+	"fmt"                             //	to print errors
+	"log"
+	"os"
+
 	"github.com/bwmarrin/discordgo" // discordgo package from the repo of bwmarrin .
+	"github.com/joho/godotenv"
 )
 
 var BotId string
 var goBot *discordgo.Session
 
 func Start() {
-  
-  Token := os.Getenv("Token")
+
+	//********* This Part replit cannot have *********///
+	//*************************************************//
+
+	// load .env file
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	//*************************************************//
+
+	Token := os.Getenv("TOKEN")
 
 	//creating new bot session
 	goBot, err := discordgo.New("Bot " + Token)
@@ -49,8 +63,8 @@ func Start() {
 //Definition of messageHandler function it takes two arguments first one is discordgo.Session which is s , second one is discordgo.MessageCreate which is m.
 func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 
-  BotPrefix := os.Getenv("BotPrefix")
-  
+	BotPrefix := os.Getenv("PREFIX")
+
 	//Bot musn't reply to it's own messages , to confirm it we perform this check.
 	if m.Author.ID == BotId {
 		return
@@ -64,11 +78,11 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	if m.Content == BotPrefix+"gopher" {
-    commands.Gophers(s,m)
+		commands.Gophers(s, m)
 	}
 
 	if m.Content == BotPrefix+"help" {
-    helpEmbed:= commands.Help()
+		helpEmbed := commands.Help()
 		_, _ = s.ChannelMessageSendEmbed(m.ChannelID, helpEmbed)
 	}
 

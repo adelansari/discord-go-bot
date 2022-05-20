@@ -1,44 +1,45 @@
 ﻿package commands
 
-import(
-  paginator "discord-go-bot/bot/src/utils/paginator"
-  "github.com/bwmarrin/discordgo"
-  "fmt"
-  "time"
+import (
+	paginator "discord-go-bot/bot/src/utils/paginator"
+	"fmt"
+	"time"
+
+	"github.com/bwmarrin/discordgo"
 )
 
-func Gophers(s *discordgo.Session, m *discordgo.MessageCreate){
-    p := paginator.NewPaginator(s, m.ChannelID)
+func Gophers(s *discordgo.Session, m *discordgo.MessageCreate) {
+	p := paginator.NewPaginator(s, m.ChannelID)
 
-		// Add embed pages to paginator
+	// Add embed pages to paginator
 
-		// returning values of gophersImages and gophersUrl from images/gophers.go
-		gopherImages, gophersUrl := GopherList()
+	// returning values of gophersImages and gophersUrl from images/gophers.go
+	gopherImages, gophersUrl := GopherList()
 
-		for i := 0; i < len(gopherImages); i++ {
-			gopherName := fmt.Sprintf("Image %d: %s", i+1, gopherImages[i])
-			p.Add(&discordgo.MessageEmbed{
-				Title:       "Collection of Gopher Images",
-				Description: gopherName,
-				Image:       &discordgo.MessageEmbedImage{URL: gophersUrl[i]},
-			})
-		}
-
-		// Sets the footers of all added pages to their page numbers.
-		p.SetPageFooters()
-
-		// When the paginator is done listening set the colour to yellow
-		p.ColourWhenDone = 0xffff
-
-		// Stop listening for reaction events after five minutes
-		p.Widget.Timeout = time.Minute * 5
-
-		// Add a custom handler for the gun reaction.
-		p.Widget.Handle("🔫", func(w *paginator.Widget, r *discordgo.MessageReaction) {
-			s.ChannelMessageSend(m.ChannelID, "Bang!")
+	for i := 0; i < len(gopherImages); i++ {
+		gopherName := fmt.Sprintf("Image %d: %s", i+1, gopherImages[i])
+		p.Add(&discordgo.MessageEmbed{
+			Title:       "Collection of Gopher Images",
+			Description: gopherName,
+			Image:       &discordgo.MessageEmbedImage{URL: gophersUrl[i]},
 		})
+	}
 
-		p.Spawn()
+	// Sets the footers of all added pages to their page numbers.
+	p.SetPageFooters()
+
+	// When the paginator is done listening set the colour to yellow
+	p.ColourWhenDone = 0xffff
+
+	// Stop listening for reaction events after five minutes
+	p.Widget.Timeout = time.Minute * 5
+
+	// Add a custom handler for the gun reaction.
+	p.Widget.Handle("🔫", func(w *paginator.Widget, r *discordgo.MessageReaction) {
+		s.ChannelMessageSend(m.ChannelID, "Bang!")
+	})
+
+	p.Spawn()
 }
 
 func GopherList() ([]string, []string) {
