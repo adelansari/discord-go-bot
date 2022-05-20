@@ -17,8 +17,8 @@ Creating a discord bot using Go lang
 First install Go from [here](https://go.dev/dl/).
 
 Install the following dependencies:
-- [DiscordGo](https://github.com/bwmarrin/discordgo) :$~~~~$`go get github.com/bwmarrin/discordgo`
-- [GoDotEnv](https://github.com/joho/godotenv) : $~~~~$`go get github.com/joho/godotenv`
+- [DiscordGo](https://github.com/bwmarrin/discordgo) : &nbsp; `go get github.com/bwmarrin/discordgo`
+- [GoDotEnv](https://github.com/joho/godotenv) : &nbsp; `go get github.com/joho/godotenv`
 
 You can run the bot normally using either of the following:
 - `go run main.go`
