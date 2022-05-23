@@ -15,20 +15,20 @@ func Giveaway(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if len(messageSentFull) == 1 {
 		giveawayHelpEmbed := &discordgo.MessageEmbed{
 			Title:       "Giveaway Help",
-			Description: fmt.Sprintf("To create a giveaway you must use one of the following commands:\n"),
+			Description: fmt.Sprintf("To create a giveaway you must use one of the following commands:"),
 			Fields: []*discordgo.MessageEmbedField{
 				{
-					Name: "`!giveaway create YourMessageHere`",
+					Name: "`.giveaway create YourMessageHere`",
 					Value: "To create a message reaction embed with the giveaway content.\n" +
-						"Example:\n!giveaway create This is a giveaway for Scarlet Nexus!",
+						"Example:\n*.giveaway create This is a giveaway for Scarlet Nexus!*",
 				},
 				{
-					Name: "`!giveaway pick MessageID`",
+					Name: "\n`.giveaway pick MessageID`",
 					Value: "To pick a winner from the giveaway with the Message ID.\n" +
-						"Example:\n!giveaway pick 978202141602742302",
+						"Example:\n*.giveaway pick 978202141602742302*",
 				},
 			},
-			Color: 10029037, // hex color to decimal
+			Color: 9589448, // hex color to decimal
 		}
 		_, _ = s.ChannelMessageSendEmbed(m.ChannelID, giveawayHelpEmbed)
 
