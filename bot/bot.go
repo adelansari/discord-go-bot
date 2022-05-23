@@ -2,7 +2,8 @@ package bot
 
 import (
 	"discord-go-bot/bot/src/commands" // importing commands pachage
-	"fmt"                             //	to print errors
+	"flag"
+	"fmt" //	to print errors
 	"log"
 	"os"
 	"strings"
@@ -13,6 +14,11 @@ import (
 
 var BotId string
 var goBot *discordgo.Session
+var (
+	GuildID        = flag.String("guild", "", "Test guild ID. If not passed - bot registers commands globally")
+	BotToken       = flag.String("token", "", "Bot access token")
+	RemoveCommands = flag.Bool("rmcmd", true, "Remove all commands after shutdowning or not")
+)
 
 func Start() {
 
@@ -59,6 +65,19 @@ func Start() {
 	if err != nil {
 		fmt.Println(err.Error())
 		return
+	}
+
+	command := &discordgo.ApplicationCommand{
+		Name:        "command-name",
+		Type:        discordgo.ChatApplicationCommand,
+		Description: "Slash commands are amazing",
+	}
+
+	//registeredCommand, err := discordgo.ApplicationCommandCreate(goBot.State.User.ID, *GuildID, command)
+	registeredCommand, err := goBot.ApplicationCommandCreate(goBot.State.User.ID, *GuildID, command)
+	if err != nil {
+		fmt.Println(registeredCommand)
+		log.Panicf("Cannot create '%v' command: %v", command.Name, err)
 	}
 	//If every thing works fine we will be printing this.
 	fmt.Println("Bot is running !")
