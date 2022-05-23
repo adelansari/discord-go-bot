@@ -5,6 +5,7 @@ import (
 	"fmt"                             //	to print errors
 	"log"
 	"os"
+	"strings"
 
 	"github.com/bwmarrin/discordgo" // discordgo package from the repo of bwmarrin .
 	"github.com/joho/godotenv"
@@ -50,6 +51,9 @@ func Start() {
 	// Adding handler function to handle our messages using AddHandler from discordgo package.
 	goBot.AddHandler(messageHandler)
 
+	// Letting the bot have all intents because why not.
+	goBot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsAllWithoutPrivileged)
+
 	err = goBot.Open()
 	//Error handling
 	if err != nil {
@@ -65,25 +69,50 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	BotPrefix := "!"
 
-	//Bot musn't reply to it's own messages , to confirm it we perform this check.
-	if m.Author.ID == BotId {
-		return
-	}
-	//If we message ping to our bot in our discord it will return us pong .
-	if m.Content == BotPrefix+"ping" {
-		_, _ = s.ChannelMessageSend(m.ChannelID, "pong!")
-	}
-	if m.Content == BotPrefix+"pong" {
-		_, _ = s.ChannelMessageSend(m.ChannelID, "ping!")
-	}
+	// Split the user message around each instance of one or more consecutive white space characters
+	messageSentFull := strings.Fields(m.Content)
 
-	if m.Content == BotPrefix+"gopher" {
-		commands.Gophers(s, m)
-	}
+	if len(messageSentFull) != 0 {
+		// Saving the command field of the message
+		messageFirstField := strings.ToLower(messageSentFull[0])
 
-	if m.Content == BotPrefix+"help" {
-		helpEmbed := commands.Help()
-		_, _ = s.ChannelMessageSendEmbed(m.ChannelID, helpEmbed)
+		//Bot musn't reply to it's own messages , to confirm it we perform this check.
+		if m.Author.ID == BotId {
+			return
+		}
+		//If we message ping to our bot in our discord it will return us pong .
+		if messageFirstField == BotPrefix+"ping" {
+			commands.Ping(s, m)
+		}
+		if messageFirstField == BotPrefix+"pong" {
+			commands.Pong(s, m)
+		}
+
+		if messageFirstField == BotPrefix+"giveaway" {
+			commands.Giveaway(s, m)
+		}
+
+		if messageFirstField == BotPrefix+"gopher" {
+			commands.Gophers(s, m)
+		}
+
+		if messageFirstField == BotPrefix+"help" {
+			helpEmbed := commands.Help()
+			_, _ = s.ChannelMessageSendEmbed(m.ChannelID, helpEmbed)
+		}
+
+		if messageFirstField == "hi" {
+			s.ChannelMessageSend(m.ChannelID, "Hello!")
+		}
+
+		if messageFirstField == "hello" {
+			s.ChannelMessageSend(m.ChannelID, "Hi!")
+		}
+
+		if messageFirstField == "bye" {
+			s.ChannelMessageSend(m.ChannelID, "Sayonara 👋")
+		}
+
 	}
 
 }
