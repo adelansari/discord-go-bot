@@ -56,7 +56,7 @@ func Start() {
 
 	// Adding handler function to handle our messages using AddHandler from discordgo package.
 	goBot.AddHandler(messageHandler)
-
+	goBot.AddHandler(slashHandler)
 	// Letting the bot have all intents because why not.
 	goBot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsAllWithoutPrivileged)
 
@@ -68,9 +68,9 @@ func Start() {
 	}
 
 	command := &discordgo.ApplicationCommand{
-		Name:        "command-name",
+		Name:        "ping",
 		Type:        discordgo.ChatApplicationCommand,
-		Description: "Slash commands are amazing",
+		Description: "Ping me!",
 	}
 
 	//registeredCommand, err := discordgo.ApplicationCommandCreate(goBot.State.User.ID, *GuildID, command)
@@ -81,6 +81,23 @@ func Start() {
 	}
 	//If every thing works fine we will be printing this.
 	fmt.Println("Bot is running !")
+}
+
+func slashHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	if i.Type != discordgo.InteractionApplicationCommand {
+		return
+	}
+
+	data := i.ApplicationCommandData()
+	switch data.Name {
+	case "ping":
+		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: fmt.Sprintf("Pong!"),
+			},
+		})
+	}
 }
 
 //Definition of messageHandler function it takes two arguments first one is discordgo.Session which is s , second one is discordgo.MessageCreate which is m.
