@@ -1,17 +1,25 @@
 package commands
 
 import (
+	"fmt"
+
 	"github.com/bwmarrin/discordgo"
 )
 
 func Ping(s *discordgo.Session, m *discordgo.MessageCreate) {
 
-	s.ChannelMessageSend(m.ChannelID, "pong!")
+	botLatency := s.HeartbeatLatency()
+	pongMessage := fmt.Sprintf("%s ", botLatency) + "pong!"
+
+	s.ChannelMessageSend(m.ChannelID, pongMessage)
 
 }
 
 func Pong(s *discordgo.Session, m *discordgo.MessageCreate) {
 
-	s.ChannelMessageSend(m.ChannelID, "ping!")
+	botLatency := s.HeartbeatLatency()
+	pingMessage := fmt.Sprintf("%s ", botLatency) + "ping!"
+
+	s.ChannelMessageSend(m.ChannelID, pingMessage)
 
 }

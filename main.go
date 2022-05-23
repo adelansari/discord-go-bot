@@ -1,7 +1,7 @@
 package main
 
 import (
-	"discord-go-bot/bot"
+	bot "discord-go-bot/bot/src/main"
 )
 
 func main() {
