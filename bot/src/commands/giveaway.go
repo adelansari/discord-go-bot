@@ -85,6 +85,13 @@ func GiveawayCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
+	// Deleting the initial user message:
+	err = s.ChannelMessageDelete(m.ChannelID, m.ID)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
 }
 
 func PickWinner(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -99,6 +106,9 @@ func PickWinner(s *discordgo.Session, m *discordgo.MessageCreate) {
 		fmt.Println(err.Error())
 		return
 	}
+
+	// Bot or the message author's name
+	botUsername := fetchedMessage.Author.Username
 
 	// Preparing emotes
 	allReactions := fetchedMessage.Reactions // all reaction emotes on a certain message
@@ -118,8 +128,17 @@ func PickWinner(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 		// formatting users:
 		reactionUsers, _ := s.MessageReactions(m.ChannelID, fetchedMessage.ID, reactionEmotes[i], 50, "", "")
-		randomIndex := rand.Intn(len(reactionUsers))
-		userPick := fmt.Sprintf("%s", reactionUsers[randomIndex])
+
+		// filtering out the bot or the message author's name
+		reactionUsersFiltered := []*discordgo.User{}
+		for i := range reactionUsers {
+			if reactionUsers[i].Username != botUsername {
+				reactionUsersFiltered = append(reactionUsersFiltered, reactionUsers[i])
+			}
+		}
+
+		randomIndex := rand.Intn(len(reactionUsersFiltered))
+		userPick := fmt.Sprintf("%s", reactionUsersFiltered[randomIndex])
 
 		// winner message corresponding to the emote:
 		winnerMessage := "The winner for " + emotesFormated[i] + " reaction is " + userPick
