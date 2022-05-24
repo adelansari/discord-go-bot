@@ -136,10 +136,22 @@ func Start() {
 		},
 	}
 
+	GiveawaySlash := []*scm.Feature{
+		{
+			Type:    discordgo.InteractionApplicationCommand,
+			Handler: scmSlash.Giveaway,
+			ApplicationCommand: &discordgo.ApplicationCommand{
+				Name:        "giveaway",
+				Description: "giveaway embed",
+			},
+		},
+	}
+
 	// Register ApplicationCommands
 	scmSlash.Manager.AddFeatures(PingSlash)
 	scmSlash.Manager.AddFeatures(PongSlash)
 	scmSlash.Manager.AddFeatures(JokeSlash)
+	scmSlash.Manager.AddFeatures(GiveawaySlash)
 
 	scmSlash.Session.AddHandler(scmSlash.Manager.HandleInteraction)
 	err = scmSlash.Manager.CreateCommands(scmSlash.Session, scmSlash.Guild)

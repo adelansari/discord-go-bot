@@ -8,7 +8,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func Giveaway(s *discordgo.Session, m *discordgo.MessageCreate) []*discordgo.MessageEmbed {
+func Giveaway(s *discordgo.Session, m *discordgo.MessageCreate) *discordgo.MessageEmbed {
 
 	messageSentFull := strings.Fields(m.Content)
 	// the message ID inputted by the user
@@ -31,7 +31,7 @@ func Giveaway(s *discordgo.Session, m *discordgo.MessageCreate) []*discordgo.Mes
 			Color: 9589448, // hex color to decimal
 		}
 		_, _ = s.ChannelMessageSendEmbed(m.ChannelID, giveawayHelpEmbed)
-		return [giveawayHelpEmbed]
+		return giveawayHelpEmbed
 
 	} else {
 		giveawayCommand := strings.ToLower(messageSentFull[1])
