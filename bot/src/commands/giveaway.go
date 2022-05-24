@@ -8,11 +8,17 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func Giveaway(s *discordgo.Session, m *discordgo.MessageCreate) *discordgo.MessageEmbed {
+// func GiveawayExport() {
+// 	giveawayHelpEmbed := Giveaway(s *discordgo.Session, m *discordgo.MessageCreate)
+// }
+
+func Giveaway(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	messageSentFull := strings.Fields(m.Content)
 	// the message ID inputted by the user
 	if len(messageSentFull) == 1 {
+		s := s
+		m := m
 		giveawayHelpEmbed := &discordgo.MessageEmbed{
 			Title:       "Giveaway Help",
 			Description: fmt.Sprintf("To create a giveaway you must use one of the following commands:"),
@@ -31,7 +37,6 @@ func Giveaway(s *discordgo.Session, m *discordgo.MessageCreate) *discordgo.Messa
 			Color: 9589448, // hex color to decimal
 		}
 		_, _ = s.ChannelMessageSendEmbed(m.ChannelID, giveawayHelpEmbed)
-		return giveawayHelpEmbed
 
 	} else {
 		giveawayCommand := strings.ToLower(messageSentFull[1])
@@ -42,7 +47,6 @@ func Giveaway(s *discordgo.Session, m *discordgo.MessageCreate) *discordgo.Messa
 		case "pick":
 			PickWinner(s, m)
 		}
-
 	}
 
 }

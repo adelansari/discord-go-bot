@@ -9,22 +9,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-type InteractionResponseData struct {
-	TTS             bool               `json:"tts"`
-	Content         string             `json:"content"`
-	Components      []MessageComponent `json:"components"`
-	Embeds          []*discordgo.MessageEmbed
-	AllowedMentions *MessageAllowedMentions `json:"allowed_mentions,omitempty"`
-	Flags           uint64                  `json:"flags,omitempty"`
-	Files           []*File                 `json:"-"`
-
-	// NOTE: autocomplete interaction only.
-	Choices []*ApplicationCommandOptionChoice `json:"choices,omitempty"`
-
-	CustomID string `json:"custom_id,omitempty"`
-	Title    string `json:"title,omitempty"`
-}
-
 func (scmSlash *SlashFeature) Ping(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	botLatency := s.HeartbeatLatency()
 	pongMessage := fmt.Sprintf("%s ", botLatency) + "pong!"
@@ -73,7 +57,11 @@ func (scmSlash *SlashFeature) Jokes(s *discordgo.Session, i *discordgo.Interacti
 
 func (scmSlash *SlashFeature) Giveaway(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
-	giveawayEmbed := commands.Giveaway
+	giveawayEmbed := []*discordgo.MessageEmbed{
+		{
+			Title: "Bot Commands",
+		},
+	}
 
 	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
