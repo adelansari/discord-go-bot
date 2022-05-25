@@ -14,9 +14,9 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var BotId string
-var goBot *discordgo.Session
 var (
+	BotId          string
+	goBot          *discordgo.Session
 	GuildID        = flag.String("guild", "", "Test guild ID. If not passed - bot registers commands globally")
 	BotToken       = flag.String("token", "", "Bot access token")
 	RemoveCommands = flag.Bool("rmcmd", true, "Remove all commands after shutdowning or not")
@@ -86,72 +86,9 @@ func Start() {
 	// creating scm manager
 	scmSlash.Manager = scm.NewSCM()
 
-	// creating and populating features
-	// slashCommands := []*discordgo.ApplicationCommand{
-	// 	{
-	// 		Name: "ping",
-
-	// 		Description: "To ping the bot!",
-	// 	},
-	// 	{
-	// 		Name: "pong",
-
-	// 		Description: "To pong the bot!",
-	// 	},
-	// 	{
-	// 		Name: "help",
-
-	// 		Description: "To show help embed!",
-	// 	},
-	// }
-
-	PingSlash := []*scm.Feature{
-		{
-			Type:    discordgo.InteractionApplicationCommand,
-			Handler: scmSlash.Ping,
-			ApplicationCommand: &discordgo.ApplicationCommand{
-				Name:        "ping",
-				Description: "To ping the bot!",
-			},
-		},
-	}
-	PongSlash := []*scm.Feature{
-		{
-			Type:    discordgo.InteractionApplicationCommand,
-			Handler: scmSlash.Pong,
-			ApplicationCommand: &discordgo.ApplicationCommand{
-				Name:        "pong",
-				Description: "To ping the bot!",
-			},
-		},
-	}
-	JokeSlash := []*scm.Feature{
-		{
-			Type:    discordgo.InteractionApplicationCommand,
-			Handler: scmSlash.Jokes,
-			ApplicationCommand: &discordgo.ApplicationCommand{
-				Name:        "joke",
-				Description: "The best dad jokes on Discord!",
-			},
-		},
-	}
-
-	GiveawaySlash := []*scm.Feature{
-		{
-			Type:    discordgo.InteractionApplicationCommand,
-			Handler: scmSlash.Giveaway,
-			ApplicationCommand: &discordgo.ApplicationCommand{
-				Name:        "giveaway",
-				Description: "giveaway embed",
-			},
-		},
-	}
-
 	// Register ApplicationCommands
-	scmSlash.Manager.AddFeatures(PingSlash)
-	scmSlash.Manager.AddFeatures(PongSlash)
-	scmSlash.Manager.AddFeatures(JokeSlash)
-	scmSlash.Manager.AddFeatures(GiveawaySlash)
+	slashCommandFeatures(slashfeatures)
+	scmSlash.Manager.AddFeatures(*slashfeatures)
 
 	scmSlash.Session.AddHandler(scmSlash.Manager.HandleInteraction)
 	err = scmSlash.Manager.CreateCommands(scmSlash.Session, scmSlash.Guild)
