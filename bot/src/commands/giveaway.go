@@ -21,12 +21,12 @@ func Giveaway(s *discordgo.Session, m *discordgo.MessageCreate) {
 		m := m
 		giveawayHelpEmbed := &discordgo.MessageEmbed{
 			Title:       "Giveaway Help",
-			Description: fmt.Sprintf("To create a giveaway you must use one of the following commands:"),
+			Description: fmt.Sprintf("To create a giveaway you must use one of the following commands:\n\u200B"),
 			Fields: []*discordgo.MessageEmbedField{
 				{
 					Name: "`.giveaway create YourMessageHere`",
 					Value: "To create a message reaction embed with the giveaway content.\n" +
-						"Example:\n*.giveaway create This is a giveaway for Scarlet Nexus!*",
+						"Example:\n*.giveaway create This is a giveaway for Scarlet Nexus!*\n\u200B",
 				},
 				{
 					Name: "\n`.giveaway pick MessageID`",

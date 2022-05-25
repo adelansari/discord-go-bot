@@ -43,6 +43,14 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 		},
 		{
 			Type:    appInteraction,
+			Handler: scmSlash.Invite,
+			ApplicationCommand: &discordgo.ApplicationCommand{
+				Name:        "invite",
+				Description: "Display an invite link for this bot.",
+			},
+		},
+		{
+			Type:    appInteraction,
 			Handler: scmSlash.Giveaway,
 			ApplicationCommand: &discordgo.ApplicationCommand{
 				Name:        "giveaway",
@@ -75,6 +83,22 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 						Name:        "stuff",
 						Description: "Stuff to say",
 						Required:    false,
+					},
+				},
+			},
+		},
+		{
+			Type:    appInteraction,
+			Handler: scmSlash.MagicBall,
+			ApplicationCommand: &discordgo.ApplicationCommand{
+				Name:        "8-ball",
+				Description: "I can answer all your [yes/no] questions!...",
+				Options: []*discordgo.ApplicationCommandOption{
+					{
+						Type:        discordgo.ApplicationCommandOptionString,
+						Name:        "question",
+						Description: "The life-changing question to ask",
+						Required:    true,
 					},
 				},
 			},

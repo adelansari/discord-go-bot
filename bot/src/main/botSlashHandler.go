@@ -187,3 +187,19 @@ func (scmSlash *SlashFeature) handleSay(s *discordgo.Session, i *discordgo.Inter
 	}
 
 }
+
+func (scmSlash *SlashFeature) Invite(s *discordgo.Session, i *discordgo.InteractionCreate) {
+
+	inviteLink := fmt.Sprintf("https://discord.com/oauth2/authorize?client_id=977285728042111027&permissions=1644971949425&scope=bot%%20applications.commands")
+	inviteMessage := fmt.Sprintf("Please visit %s to add this bot to your server.", inviteLink)
+
+	s.InteractionRespond(i.Interaction, messageContentResponse(inviteMessage))
+}
+
+func (scmSlash *SlashFeature) MagicBall(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	query := i.ApplicationCommandData().Options[0].StringValue()
+	magicAnswers := commands.MagicAnswers()
+	resp := fmt.Sprintf("> %s\n%s", query, magicAnswers[rand.Intn(len(magicAnswers))])
+
+	s.InteractionRespond(i.Interaction, messageContentResponse(resp))
+}

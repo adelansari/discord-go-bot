@@ -23,39 +23,30 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if m.Author.ID == BotId {
 			return
 		}
-		//If we message ping to our bot in our discord it will return us pong .
-		if messageFirstField == BotPrefix+"ping" {
+
+		switch messageFirstField {
+		case BotPrefix + "ping":
 			commands.Ping(s, m)
-		}
-		if messageFirstField == BotPrefix+"pong" {
+		case BotPrefix + "pong":
 			commands.Pong(s, m)
-		}
-
-		if messageFirstField == BotPrefix+"giveaway" {
+		case BotPrefix + "giveaway":
 			commands.Giveaway(s, m)
-		}
-
-		if messageFirstField == BotPrefix+"gopher" {
+		case BotPrefix + "gopher":
 			commands.Gophers(s, m)
-		}
-		if messageFirstField == BotPrefix+"jokes" {
+		case BotPrefix + "jokes":
 			commands.BadJokes(s, m)
-		}
-
-		if messageFirstField == BotPrefix+"help" {
+		case BotPrefix + "invite":
+			commands.Invite(s, m)
+		case BotPrefix + "help":
 			helpEmbed := commands.Help()
 			_, _ = s.ChannelMessageSendEmbed(m.ChannelID, helpEmbed)
-		}
-
-		if messageFirstField == "hi" {
+		case BotPrefix + "8ball":
+			commands.MagicBall8(s, m)
+		case "hi":
 			s.ChannelMessageSend(m.ChannelID, "Hello!")
-		}
-
-		if messageFirstField == "hello" {
+		case "hello":
 			s.ChannelMessageSend(m.ChannelID, "Hi!")
-		}
-
-		if messageFirstField == "bye" {
+		case "bye":
 			s.ChannelMessageSend(m.ChannelID, "Sayonara 👋")
 		}
 
