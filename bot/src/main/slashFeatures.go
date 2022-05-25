@@ -1,10 +1,6 @@
 package bot
 
 import (
-	// importing commands pachage
-
-	//	to print errors
-
 	scm "github.com/ethanent/discordgo-scm"
 
 	"github.com/bwmarrin/discordgo" // discordgo package from the repo of bwmarrin .
