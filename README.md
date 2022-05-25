@@ -17,12 +17,17 @@ Install the following dependencies:
 - [DiscordGo](https://github.com/bwmarrin/discordgo) : &nbsp; `go get github.com/bwmarrin/discordgo`
 - [GoDotEnv](https://github.com/joho/godotenv) : &nbsp; `go get github.com/joho/godotenv`
 
+To find and install all required packages recursively for a project:
+- `go get -u -v ./...`
+
+To ensure that the go.mod file matches the source code in the module:
+- `go mod tidy`  
+
+
+
 You can run the bot normally using either of the following:
 - `go run main.go`
 - `go run .`
-
-Useful command:
-- `go mod tidy`  
 
 ## Commands:
 Message Commands:
