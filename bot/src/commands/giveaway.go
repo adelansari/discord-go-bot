@@ -136,19 +136,25 @@ func PickWinner(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 		// filtering out the bot or the message author's name
 		reactionUsersFiltered := []*discordgo.User{}
-		for i := range reactionUsers {
-			if reactionUsers[i].Username != botUsername {
-				reactionUsersFiltered = append(reactionUsersFiltered, reactionUsers[i])
+		for j := range reactionUsers {
+			if reactionUsers[j].Username != botUsername {
+				reactionUsersFiltered = append(reactionUsersFiltered, reactionUsers[j])
 			}
 		}
 
-		randomIndex := rand.Intn(len(reactionUsersFiltered))
-		userPick := fmt.Sprintf("%s", reactionUsersFiltered[randomIndex])
+		if len(reactionUsersFiltered) > 0 {
+			randomIndex := rand.Intn(len(reactionUsersFiltered))
+			userPick := fmt.Sprintf("%s", reactionUsersFiltered[randomIndex])
 
-		// winner message corresponding to the emote:
-		winnerMessage := "The winner for " + emotesFormated[i] + " reaction is " + userPick
-		s.ChannelMessageSend(m.ChannelID, winnerMessage)
-
+			// winner message corresponding to the emote:
+			winnerMessage := "The winner for " + emotesFormated[i] + " reaction is " + userPick
+			s.ChannelMessageSend(m.ChannelID, winnerMessage)
+		} else {
+			s.ChannelMessageSend(
+				m.ChannelID,
+				"The message author reaction does not count.",
+			)
+		}
 	}
 
 }

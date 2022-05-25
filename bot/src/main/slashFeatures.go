@@ -18,9 +18,11 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 
 	// creating and populating features
 
+	appInteraction := discordgo.InteractionApplicationCommand
+
 	slashfeatures = &[]*scm.Feature{
 		{
-			Type:    discordgo.InteractionApplicationCommand,
+			Type:    appInteraction,
 			Handler: scmSlash.Ping,
 			ApplicationCommand: &discordgo.ApplicationCommand{
 				Name:        "ping",
@@ -28,7 +30,7 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 			},
 		},
 		{
-			Type:    discordgo.InteractionApplicationCommand,
+			Type:    appInteraction,
 			Handler: scmSlash.Pong,
 			ApplicationCommand: &discordgo.ApplicationCommand{
 				Name:        "pong",
@@ -36,7 +38,7 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 			},
 		},
 		{
-			Type:    discordgo.InteractionApplicationCommand,
+			Type:    appInteraction,
 			Handler: scmSlash.Jokes,
 			ApplicationCommand: &discordgo.ApplicationCommand{
 				Name:        "joke",
@@ -44,7 +46,7 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 			},
 		},
 		{
-			Type:    discordgo.InteractionApplicationCommand,
+			Type:    appInteraction,
 			Handler: scmSlash.Giveaway,
 			ApplicationCommand: &discordgo.ApplicationCommand{
 				Name:        "giveaway",
@@ -66,7 +68,7 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 			},
 		},
 		{
-			Type:    discordgo.InteractionApplicationCommand,
+			Type:    appInteraction,
 			Handler: scmSlash.handleSay,
 			ApplicationCommand: &discordgo.ApplicationCommand{
 				Name:        "say",
