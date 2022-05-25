@@ -9,7 +9,7 @@ import (
 func Help() *discordgo.MessageEmbed {
 	helpEmbed := &discordgo.MessageEmbed{
 		Title: "Bot Commands",
-		Description: fmt.Sprintf("\nHelp Command:\n" +
+		Description: fmt.Sprintf("\nHelp Command\n" +
 			"`.help`    -  A list of help commands\n" +
 			"\nCore Commands:\n" +
 			"`.gopher`  -  To show pages of Gopher images in an embed\n" +
