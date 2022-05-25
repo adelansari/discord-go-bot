@@ -2,22 +2,13 @@ package bot
 
 import (
 	"discord-go-bot/bot/src/commands"
-	"encoding/json"
+
 	"fmt"
 	"log"
 	"math/rand"
 
 	"github.com/bwmarrin/discordgo"
 )
-
-// JSON pretty print by marshaling value
-func PrettyStruct(data interface{}) (string, error) {
-	val, err := json.MarshalIndent(data, "", "    ")
-	if err != nil {
-		return "", err
-	}
-	return string(val), nil
-}
 
 // Responding to interaction with a message
 func messageContentResponse(c string) *discordgo.InteractionResponse {
