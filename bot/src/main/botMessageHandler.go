@@ -10,7 +10,7 @@ import (
 //Definition of messageHandler function it takes two arguments first one is discordgo.Session which is s , second one is discordgo.MessageCreate which is m.
 func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 
-	BotPrefix := "+"
+	BotPrefix := "$"
 
 	// Split the user message around each instance of one or more consecutive white space characters
 	messageSentFull := strings.Fields(m.Content)
@@ -19,8 +19,8 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		// Saving the command field of the message
 		messageFirstField := strings.ToLower(messageSentFull[0])
 
-		//Bot musn't reply to it's own messages , to confirm it we perform this check.
-		if m.Author.ID == BotId {
+		//Bot musn't reply to it's own messages or any other bot
+		if m.Author.ID == s.State.User.ID || m.Author.Bot == true {
 			return
 		}
 
