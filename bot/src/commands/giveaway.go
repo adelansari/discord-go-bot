@@ -14,6 +14,8 @@ import (
 
 func Giveaway(s *discordgo.Session, m *discordgo.MessageCreate) {
 
+	//testing what happens if I made some changes
+
 	messageSentFull := strings.Fields(m.Content)
 	// the message ID inputted by the user
 	if len(messageSentFull) == 1 {
