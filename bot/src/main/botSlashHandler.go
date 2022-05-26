@@ -46,7 +46,7 @@ func (scmSlash *SlashFeature) Jokes(s *discordgo.Session, i *discordgo.Interacti
 
 	jokes := commands.JokeData()
 
-	err := s.InteractionRespond(i.Interaction, messageContentResponse(jokes[rand.Intn(len(jokes))]))
+	err := s.InteractionRespond(i.Interaction, messageContentResponse(jokes))
 	if err != nil {
 		log.Fatal("could not fetch any jokes.", err)
 	}
