@@ -1,7 +1,7 @@
 # discord-go-bot
 Creating a discord bot using Go lang
 
-![Alt](https://repobeats.axiom.co/api/embed/76f75f56b773f742fd9f9df54443be7fea06186b.svg "Repobeats analytics image")
+![Alt](https://repobeats.axiom.co/api/embed/76f75f56b773f742fd9f9df54443be7fea06186b.svg)
 
 
 ## Setup
