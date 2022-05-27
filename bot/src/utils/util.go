@@ -21,7 +21,7 @@ func PrettyStruct(data interface{}) (string, error) {
 }
 
 func ApiData(category string, limit string) []byte {
-	token := os.Getenv("APININJAKEY")
+	ninjaToken := os.Getenv("APININJAKEY")
 	url := apiLink + category + dataLimit + limit
 
 	client := http.Client{}
@@ -30,7 +30,7 @@ func ApiData(category string, limit string) []byte {
 	if err != nil {
 		fmt.Print(err.Error())
 	}
-	req.Header.Add("X-Api-Key", token)
+	req.Header.Add("X-Api-Key", ninjaToken)
 
 	resp, err := client.Do(req)
 	if err != nil {
