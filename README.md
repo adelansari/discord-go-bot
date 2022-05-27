@@ -41,7 +41,7 @@ Help Command:
 Core Commands:
 .gopher   -  To show pages of Gopher images in an embed.
 .giveaway -  Creating a giveaway or picking a random winner.
-.jokes	  -  Displays a random joke.
+.joke	  -  Displays a random joke.
 .8ball    -  Answer to all your [yes/no] questions.
 
 Misc. Commands:

@@ -33,7 +33,7 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 			commands.Giveaway(s, m)
 		case BotPrefix + "gopher":
 			commands.Gophers(s, m)
-		case BotPrefix + "jokes":
+		case BotPrefix + "joke":
 			commands.BadJokes(s, m)
 		case BotPrefix + "invite":
 			commands.Invite(s, m)

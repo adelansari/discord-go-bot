@@ -14,7 +14,7 @@ func Help() *discordgo.MessageEmbed {
 			"\nCore Commands:\n" +
 			"`.gopher`  -  To show pages of Gopher images in an embed\n" +
 			"`.giveaway`- Creating a giveaway or picking a random winner!\n" +
-			"`.jokes`   -  Displays a random joke.\n" +
+			"`.joke`   -  Displays a random joke.\n" +
 			"`.8ball`   -  Answer to all your [yes/no] questions.\n" +
 
 			"\nMisc. Commands:\n" +
