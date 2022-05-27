@@ -7,6 +7,8 @@ import (
 	"fmt" //	to print errors
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
 
 	scm "github.com/ethanent/discordgo-scm"
 
@@ -112,15 +114,12 @@ func Start() {
 
 	//If every thing works fine we will be printing this.
 	fmt.Println("Bot is running !")
+	sc := make(chan os.Signal, 1)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+	<-sc
 
-	// cleanly close down the Discord session
-
-	// err = scmSlash.Manager.DeleteCommands(scmSlash.Session, scmSlash.Guild)
-	// if err != nil {
-	// 	log.Print("could not delete commands", err)
-	// }
-
-	// scmSlash.Session.Close()
+	// Cleanly close down the Discord session.
+	goBot.Close()
 
 }
 
