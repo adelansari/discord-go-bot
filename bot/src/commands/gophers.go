@@ -1,4 +1,4 @@
-﻿package commands
+package commands
 
 import (
 	paginator "discord-go-bot/bot/src/utils/paginator"
