@@ -32,6 +32,8 @@ type SlashFeature struct {
 
 func Start() {
 
+	// Testing if replit is running two instances
+
 	// load .env file
 	err := godotenv.Load(".env")
 	if err != nil {
