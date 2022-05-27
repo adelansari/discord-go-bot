@@ -31,16 +31,11 @@ type SlashFeature struct {
 
 func Start() {
 
-	// testing
-
-	//********* This Part replit cannot have *********///
-	//*************************************************//
 	// load .env file
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		fmt.Println("Error loading .env file")
 	}
-	//*************************************************//
 
 	Token := os.Getenv("TOKEN")
 	// if Token == "" {
