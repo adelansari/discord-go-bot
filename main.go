@@ -14,5 +14,4 @@ func main() {
 
 	bot.Start()
 
-	return
 }
