@@ -8,7 +8,6 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"syscall"
 
 	scm "github.com/ethanent/discordgo-scm"
 
@@ -38,7 +37,7 @@ func Start() {
 	// load .env file
 	err := godotenv.Load(".env")
 	if err != nil {
-		fmt.Println("Error loading .env file")
+		fmt.Println("Replit doesn't need to read .env files.")
 	}
 
 	Token := os.Getenv("TOKEN")
@@ -114,12 +113,17 @@ func Start() {
 
 	//If every thing works fine we will be printing this.
 	fmt.Println("Bot is running !")
-	sc := make(chan os.Signal, 1)
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
-	<-sc
 
 	// Cleanly close down the Discord session.
-	goBot.Close()
+	defer goBot.Close()
+
+	stop := make(chan os.Signal, 1)
+	// signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+	signal.Notify(stop, os.Interrupt)
+	log.Println("Press Ctrl+C to exit")
+	<-stop
+
+	// signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 
 }
 
