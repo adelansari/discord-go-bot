@@ -10,7 +10,7 @@ import (
 //Definition of messageHandler function it takes two arguments first one is discordgo.Session which is s , second one is discordgo.MessageCreate which is m.
 func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 
-	BotPrefix := "$"
+	BotPrefix := "."
 
 	// Split the user message around each instance of one or more consecutive white space characters
 	messageSentFull := strings.Fields(m.Content)
