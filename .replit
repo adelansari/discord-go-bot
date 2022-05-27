@@ -1,2 +1,2 @@
 language = "go"
-run = "go run main.go"
+run = "./repl.deploy --standalone go run main.go"
