@@ -31,6 +31,8 @@ type SlashFeature struct {
 
 func Start() {
 
+	// testing some stuff
+
 	// load .env file
 	err := godotenv.Load(".env")
 	if err != nil {
