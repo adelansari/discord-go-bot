@@ -42,6 +42,16 @@ func (scmSlash *SlashFeature) Pong(s *discordgo.Session, i *discordgo.Interactio
 	}
 }
 
+func (scmSlash *SlashFeature) DadJoke(s *discordgo.Session, i *discordgo.InteractionCreate) {
+
+	jokes := commands.DadJoke()
+
+	err := s.InteractionRespond(i.Interaction, messageContentResponse(jokes))
+	if err != nil {
+		log.Fatal("could not fetch any jokes.", err)
+	}
+}
+
 func (scmSlash *SlashFeature) Jokes(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 	jokes := commands.JokeData()

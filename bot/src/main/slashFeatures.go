@@ -38,6 +38,14 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 			Handler: scmSlash.Jokes,
 			ApplicationCommand: &discordgo.ApplicationCommand{
 				Name:        "joke",
+				Description: "The best jokes on Discord!",
+			},
+		},
+		{
+			Type:    appInteraction,
+			Handler: scmSlash.DadJoke,
+			ApplicationCommand: &discordgo.ApplicationCommand{
+				Name:        "dad-joke",
 				Description: "The best dad jokes on Discord!",
 			},
 		},

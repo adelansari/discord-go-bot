@@ -3,6 +3,7 @@ package commands
 import (
 	util "discord-go-bot/bot/src/utils"
 	"encoding/json"
+	"math/rand"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -19,4 +20,9 @@ func JokeData() string {
 	joke := make(Joke, 1)
 	json.Unmarshal(util.ApiData("jokes", "1"), &joke)
 	return joke[0].JokeText
+}
+
+func DadJoke() string {
+	jdata := util.DadJokeData()
+	return jdata[rand.Intn(len(jdata))]
 }
