@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 
 	"github.com/bwmarrin/discordgo"
@@ -49,6 +50,7 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		correctAnswer = rec.CorrectAnswer
 		allAnswers = rec.IncorrectAnswers
 		allAnswers = append(allAnswers, correctAnswer)
+		rand.Shuffle(len(allAnswers), func(i, j int) { allAnswers[i], allAnswers[j] = allAnswers[j], allAnswers[i] })
 	}
 
 	btnEmoji := []string{"1️⃣", "2️⃣", "3️⃣", "4️⃣"}
@@ -87,7 +89,6 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		// assert the inner InteractionData to ApplicationCommandInteractionData
 
 		data := i.MessageComponentData()
-
 		// at the moment, the correct answer is always at the last index in the allAnswers array.
 
 		if data.CustomID == "buttonIndex_3" {
