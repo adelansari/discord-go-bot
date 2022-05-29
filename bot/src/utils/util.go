@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 const apiLink = "https://api.api-ninjas.com/v1/"
@@ -18,6 +20,16 @@ func PrettyStruct(data interface{}) (string, error) {
 		return "", err
 	}
 	return string(val), nil
+}
+
+// Responding to interaction with a message
+func MessageContentResponse(c string) *discordgo.InteractionResponse {
+	return &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Content: c,
+		},
+	}
 }
 
 func ApiData(category string, limit string) []byte {

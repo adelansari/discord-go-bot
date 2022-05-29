@@ -111,6 +111,14 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 				},
 			},
 		},
+		{
+			Type:    appInteraction,
+			Handler: scmSlash.Trivia,
+			ApplicationCommand: &discordgo.ApplicationCommand{
+				Name:        "trivia",
+				Description: "Displays a multiple choice trivia questions from General Knowledge category.",
+			},
+		},
 	}
 
 	// featurePointer := &slashfeatures

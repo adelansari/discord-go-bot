@@ -42,6 +42,8 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 			_, _ = s.ChannelMessageSendEmbed(m.ChannelID, helpEmbed)
 		case BotPrefix + "8ball":
 			commands.MagicBall8(s, m)
+		case BotPrefix + "trivia":
+			commands.Trivia(s, m)
 		case "hi":
 			s.ChannelMessageSend(m.ChannelID, "Hello!")
 		case "hello":

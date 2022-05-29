@@ -68,7 +68,7 @@ func Start() {
 	// goBot.AddHandler(slashHandler)   //  slash hander if needed
 
 	// Letting the bot have all intents because why not.
-	goBot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsAllWithoutPrivileged)
+	goBot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsAll)
 
 	err = goBot.Open()
 	//Error handling
