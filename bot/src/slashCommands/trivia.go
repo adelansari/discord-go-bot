@@ -81,4 +81,17 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		panic(err.Error())
 	}
 
+	switch i.Type {
+	case discordgo.InteractionMessageComponent:
+
+		// assert the inner InteractionData to ApplicationCommandInteractionData
+
+		data := i.MessageComponentData()
+
+		// at the moment, the correct answer is always at the last index in the allAnswers array.
+
+		if data.CustomID == "buttonIndex_3" {
+			// do something
+		}
+	}
 }
