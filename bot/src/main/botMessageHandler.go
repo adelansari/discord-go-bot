@@ -36,6 +36,8 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 			commands.Gophers(s, m)
 		case BotPrefix + "joke":
 			commands.BadJokes(s, m)
+		case BotPrefix + "meme":
+			commands.Meme(s, m)
 		case BotPrefix + "invite":
 			commands.Invite(s, m)
 		case BotPrefix + "help", s.State.User.Mention():

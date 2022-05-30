@@ -18,7 +18,7 @@ func BadJokes(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 func JokeData() string {
 	joke := make(Joke, 1)
-	json.Unmarshal(util.ApiData("jokes", "1"), &joke)
+	json.Unmarshal(util.JokeApiData("jokes", "1"), &joke)
 	return joke[0].JokeText
 }
 

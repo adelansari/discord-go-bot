@@ -22,6 +22,10 @@ func (scmSlash *SlashFeature) Jokes(s *discordgo.Session, i *discordgo.Interacti
 	slash.JokesSlash(s, i)
 }
 
+func (scmSlash *SlashFeature) Meme(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	slash.MemeSlash(s, i)
+}
+
 func (scmSlash *SlashFeature) Giveaway(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	slash.SaySlash(s, i)
 }

@@ -12,6 +12,7 @@ import (
 
 const apiLink = "https://api.api-ninjas.com/v1/"
 const dataLimit = "?limit="
+const memeApiLink = "https://meme-api.herokuapp.com/gimme"
 
 // JSON pretty print by marshaling value
 func PrettyStruct(data interface{}) (string, error) {
@@ -32,11 +33,9 @@ func MessageContentResponse(c string) *discordgo.InteractionResponse {
 	}
 }
 
-func ApiData(category string, limit string) []byte {
+func JokeApiData(category string, limit string) []byte {
 	ninjaToken := os.Getenv("APININJAKEY")
 	url := apiLink + category + dataLimit + limit
-
-	client := http.Client{}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -44,6 +43,19 @@ func ApiData(category string, limit string) []byte {
 	}
 	req.Header.Add("X-Api-Key", ninjaToken)
 
+	return getFromUrl(req)
+}
+
+func MemeApiData() []byte {
+	req, err := http.NewRequest("GET", memeApiLink, nil)
+	if err != nil {
+		fmt.Print(err.Error())
+	}
+	return getFromUrl(req)
+}
+
+func getFromUrl(req *http.Request) []byte {
+	client := http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Print(err.Error())

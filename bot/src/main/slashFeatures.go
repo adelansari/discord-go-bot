@@ -51,6 +51,14 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 		},
 		{
 			Type:    appInteraction,
+			Handler: scmSlash.Meme,
+			ApplicationCommand: &discordgo.ApplicationCommand{
+				Name:        "meme",
+				Description: "A random meme!",
+			},
+		},
+		{
+			Type:    appInteraction,
 			Handler: scmSlash.Invite,
 			ApplicationCommand: &discordgo.ApplicationCommand{
 				Name:        "invite",
