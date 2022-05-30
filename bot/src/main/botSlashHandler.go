@@ -40,4 +40,5 @@ func (scmSlash *SlashFeature) MagicBall(s *discordgo.Session, i *discordgo.Inter
 
 func (scmSlash *SlashFeature) Trivia(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	slash.TriviaSlash(s, i)
+
 }

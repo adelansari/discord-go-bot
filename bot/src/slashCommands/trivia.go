@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -47,6 +48,8 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	var allAnswers []string
 	for _, rec := range data.Results {
 		question = rec.Question
+		question = strings.ReplaceAll(question, "&quot;", "`")
+		question = strings.ReplaceAll(question, "&#039;", "'")
 		correctAnswer = rec.CorrectAnswer
 		allAnswers = rec.IncorrectAnswers
 		allAnswers = append(allAnswers, correctAnswer)
@@ -83,16 +86,10 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		panic(err.Error())
 	}
 
-	switch i.Type {
-	case discordgo.InteractionMessageComponent:
+	// switch i.Type {
+	// case discordgo.InteractionMessageComponent:
+	// 	// msgInteraction, _ := s.InteractionResponse(i.Interaction)
+	// 	// fmt.Println(msgInteraction)
 
-		// assert the inner InteractionData to ApplicationCommandInteractionData
-
-		data := i.MessageComponentData()
-		// at the moment, the correct answer is always at the last index in the allAnswers array.
-
-		if data.CustomID == "buttonIndex_3" {
-			// do something
-		}
-	}
+	// }
 }
