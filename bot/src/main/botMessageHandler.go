@@ -25,6 +25,7 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 
 		switch messageFirstField {
+
 		case BotPrefix + "ping":
 			commands.Ping(s, m)
 		case BotPrefix + "pong":
@@ -37,9 +38,8 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 			commands.BadJokes(s, m)
 		case BotPrefix + "invite":
 			commands.Invite(s, m)
-		case BotPrefix + "help":
-			helpEmbed := commands.Help()
-			_, _ = s.ChannelMessageSendEmbed(m.ChannelID, helpEmbed)
+		case BotPrefix + "help", s.State.User.Mention():
+			commands.Help(s, m)
 		case BotPrefix + "8ball":
 			commands.MagicBall8(s, m)
 		case BotPrefix + "trivia":
