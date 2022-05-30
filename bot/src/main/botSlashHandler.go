@@ -23,7 +23,7 @@ func (scmSlash *SlashFeature) Jokes(s *discordgo.Session, i *discordgo.Interacti
 }
 
 func (scmSlash *SlashFeature) Giveaway(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	slash.SaySlash(s, i)
+	slash.GiveawaySlash(s, i)
 }
 
 func (scmSlash *SlashFeature) handleSay(s *discordgo.Session, i *discordgo.InteractionCreate) {
