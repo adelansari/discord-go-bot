@@ -27,7 +27,7 @@ func (scmSlash *SlashFeature) Meme(s *discordgo.Session, i *discordgo.Interactio
 }
 
 func (scmSlash *SlashFeature) Giveaway(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	slash.SaySlash(s, i)
+	slash.GiveawaySlash(s, i)
 }
 
 func (scmSlash *SlashFeature) handleSay(s *discordgo.Session, i *discordgo.InteractionCreate) {
