@@ -83,8 +83,17 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 	err = s.InteractionRespond(i.Interaction, triviaMessage)
 	if err != nil {
-		panic(err.Error())
+		fmt.Println("Could not send the trivia question")
 	}
+
+	for i.Interaction.Type == discordgo.InteractionMessageComponent {
+		buttonInter := i.Interaction.Type
+		fmt.Println(buttonInter)
+	}
+
+	// if i.Interaction.Type == discordgo.InteractionMessageComponent {
+	// 	fmt.Println(i.MessageComponentData().CustomID)
+	// }
 
 	// switch i.Type {
 	// case discordgo.InteractionMessageComponent:
