@@ -2,8 +2,6 @@ package bot
 
 import (
 	slash "discord-go-bot/bot/src/slashCommands"
-	util "discord-go-bot/bot/src/utils"
-	"fmt"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -47,25 +45,26 @@ func (scmSlash *SlashFeature) MagicBall(s *discordgo.Session, i *discordgo.Inter
 func (scmSlash *SlashFeature) Trivia(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	slash.TriviaSlash(s, i)
 }
-func (scmSlash *SlashFeature) TriviaComponent(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
-	// storing the custom ID after the user clicks on any button.
-	btnCustomID := i.MessageComponentData().CustomID
+// func (scmSlash *SlashFeature) TriviaComponent(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
-	// importing data
-	allAnswers, correctAnswer, triviaBtn := slash.TriviaSlash(s, i)
+// 	// storing the custom ID after the user clicks on any button.
+// 	btnCustomID := i.MessageComponentData().CustomID
 
-	// Finding element index
-	correctAnswerIndex := util.Find(allAnswers, correctAnswer)
-	btnCustomIDIndex := util.Find(triviaBtn, btnCustomID)
+// 	// importing data
+// 	allAnswers, correctAnswer, triviaBtn := slash.TriviaSlash(s, i)
 
-	var btnResp string
-	if btnCustomIDIndex == correctAnswerIndex {
-		btnResp = fmt.Sprintf("🎊 The correct answer was indeed %s.", correctAnswer)
-		s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
-	} else {
-		btnResp = fmt.Sprintf("%s in incorrect unfortunetlly. 😞", allAnswers[btnCustomIDIndex])
-		s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
-	}
+// 	// Finding element index
+// 	correctAnswerIndex := util.Find(allAnswers, correctAnswer)
+// 	btnCustomIDIndex := util.Find(triviaBtn, btnCustomID)
 
-}
+// 	var btnResp string
+// 	if btnCustomIDIndex == correctAnswerIndex {
+// 		btnResp = fmt.Sprintf("🎊 The correct answer was indeed %s.", correctAnswer)
+// 		s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
+// 	} else {
+// 		btnResp = fmt.Sprintf("%s in incorrect unfortunetlly. 😞", allAnswers[btnCustomIDIndex])
+// 		s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
+// 	}
+
+// }

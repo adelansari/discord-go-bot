@@ -1,6 +1,7 @@
 package slashCommand
 
 import (
+	util "discord-go-bot/bot/src/utils"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -23,76 +24,96 @@ type triviaApi struct {
 	} `json:"results"`
 }
 
-func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) ([]string, string, []string) {
+var (
+	correctAnswer string
+	allAnswers    []string
+	triviaBtn     []string
+)
 
-	resp, err := http.Get("https://opentdb.com/api.php?amount=1&category=9&type=multiple")
-	if err != nil {
-		fmt.Println("Could not fetch trivia api", err.Error())
-	}
+func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
-	body, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
-		panic(err.Error())
-	}
-
-	var data triviaApi
-
-	// unmarshall
-	json.Unmarshal(body, &data)
-
-	// General Knowledge category
-	// Loop through the Results node for the Question
-	var question string
-	var correctAnswer string
-	var allAnswers []string
-	for _, rec := range data.Results {
-		question = rec.Question
-		question = strings.ReplaceAll(question, "&quot;", "`")
-		question = strings.ReplaceAll(question, "&#039;", "'")
-		correctAnswer = rec.CorrectAnswer
-		allAnswers = rec.IncorrectAnswers
-		allAnswers = append(allAnswers, correctAnswer)
-		rand.Shuffle(len(allAnswers), func(i, j int) { allAnswers[i], allAnswers[j] = allAnswers[j], allAnswers[i] })
-	}
-
-	fmt.Println(correctAnswer)
-
-	triviaBtn := []string{}
-	for index := range allAnswers {
-		triviaCustomID := "triviaIndex_" + fmt.Sprintf("%d", index)
-		triviaBtn = append(triviaBtn, triviaCustomID)
-	}
-	btnEmoji := []string{"1️⃣", "2️⃣", "3️⃣", "4️⃣"}
-	components := []discordgo.MessageComponent{}
-	for index, element := range allAnswers {
-		btn := discordgo.Button{
-			Emoji: discordgo.ComponentEmoji{
-				Name: btnEmoji[index],
-			},
-			Label:    element,
-			Style:    discordgo.SecondaryButton,
-			CustomID: triviaBtn[index],
+	switch i.Type {
+	case discordgo.InteractionApplicationCommand:
+		resp, err := http.Get("https://opentdb.com/api.php?amount=1&category=9&type=multiple")
+		if err != nil {
+			fmt.Println("Could not fetch trivia api", err.Error())
 		}
-		components = append(components, btn)
-	}
-	triviaMessage := &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseChannelMessageWithSource,
-		Data: &discordgo.InteractionResponseData{
-			Content: question,
-			Components: []discordgo.MessageComponent{
-				discordgo.ActionsRow{
-					Components: components,
+
+		body, err := ioutil.ReadAll(resp.Body)
+
+		if err != nil {
+			panic(err.Error())
+		}
+
+		var data triviaApi
+
+		// unmarshall
+		json.Unmarshal(body, &data)
+
+		// General Knowledge category
+		// Loop through the Results node for the Question
+		var question string
+		for _, rec := range data.Results {
+			question = rec.Question
+			question = strings.ReplaceAll(question, "&quot;", "`")
+			question = strings.ReplaceAll(question, "&#039;", "'")
+			correctAnswer = rec.CorrectAnswer
+			allAnswers = rec.IncorrectAnswers
+			allAnswers = append(allAnswers, correctAnswer)
+			rand.Shuffle(len(allAnswers), func(i, j int) { allAnswers[i], allAnswers[j] = allAnswers[j], allAnswers[i] })
+		}
+
+		fmt.Println(correctAnswer)
+
+		for index := range allAnswers {
+			triviaCustomID := "triviaIndex_" + fmt.Sprintf("%d", index)
+			triviaBtn = append(triviaBtn, triviaCustomID)
+		}
+		btnEmoji := []string{"1️⃣", "2️⃣", "3️⃣", "4️⃣"}
+		components := []discordgo.MessageComponent{}
+		for index, element := range allAnswers {
+			btn := discordgo.Button{
+				Emoji: discordgo.ComponentEmoji{
+					Name: btnEmoji[index],
+				},
+				Label:    element,
+				Style:    discordgo.SecondaryButton,
+				CustomID: triviaBtn[index],
+			}
+			components = append(components, btn)
+		}
+		triviaMessage := &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: question,
+				Components: []discordgo.MessageComponent{
+					discordgo.ActionsRow{
+						Components: components,
+					},
 				},
 			},
-		},
-	}
+		}
+		err = s.InteractionRespond(i.Interaction, triviaMessage)
+		if err != nil {
+			fmt.Println("Could not send the trivia question")
+		}
+	case discordgo.InteractionMessageComponent:
+		// storing the custom ID after the user clicks on any button.
+		btnCustomID := i.MessageComponentData().CustomID
 
-	err = s.InteractionRespond(i.Interaction, triviaMessage)
-	if err != nil {
-		fmt.Println("Could not send the trivia question")
-	}
+		// Finding element index
+		correctAnswerIndex := util.Find(allAnswers, correctAnswer)
+		btnCustomIDIndex := util.Find(triviaBtn, btnCustomID)
 
-	return allAnswers, correctAnswer, triviaBtn
+		var btnResp string
+		if btnCustomIDIndex == correctAnswerIndex {
+			btnResp = fmt.Sprintf("🎊 The correct answer was indeed %s.", correctAnswer)
+			s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
+		} else {
+			btnResp = fmt.Sprintf("%s in incorrect unfortunetlly. 😞", allAnswers[btnCustomIDIndex])
+			s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
+		}
+
+	}
 
 }

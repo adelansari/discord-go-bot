@@ -129,22 +129,22 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 		},
 		{
 			Type:     discordgo.InteractionMessageComponent,
-			Handler:  scmSlash.TriviaComponent,
+			Handler:  scmSlash.Trivia,
 			CustomID: "triviaIndex_0",
 		},
 		{
 			Type:     discordgo.InteractionMessageComponent,
-			Handler:  scmSlash.TriviaComponent,
+			Handler:  scmSlash.Trivia,
 			CustomID: "triviaIndex_1",
 		},
 		{
 			Type:     discordgo.InteractionMessageComponent,
-			Handler:  scmSlash.TriviaComponent,
+			Handler:  scmSlash.Trivia,
 			CustomID: "triviaIndex_2",
 		},
 		{
 			Type:     discordgo.InteractionMessageComponent,
-			Handler:  scmSlash.TriviaComponent,
+			Handler:  scmSlash.Trivia,
 			CustomID: "triviaIndex_3",
 		},
 	}
