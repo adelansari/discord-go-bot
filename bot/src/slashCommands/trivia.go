@@ -24,9 +24,53 @@ type triviaApi struct {
 	} `json:"results"`
 }
 
-func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
+var (
+	question      string
+	correctAnswer string
+	allAnswers    []string
+	triviaBtn     []string
+)
 
-	question, _, allAnswers := TriviaAPI()
+func TriviaAPI(*string, *string, *[]string, *[]string) {
+	resp, err := http.Get("https://opentdb.com/api.php?amount=1&category=9&type=multiple")
+	if err != nil {
+		fmt.Println("Could not fetch trivia api", err.Error())
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	var data triviaApi
+
+	// unmarshall
+	json.Unmarshal(body, &data)
+
+	// General Knowledge category
+	// Loop through the Results node for the Question
+
+	for _, rec := range data.Results {
+		question = rec.Question
+		question = strings.ReplaceAll(question, "&quot;", "`")
+		question = strings.ReplaceAll(question, "&#039;", "'")
+		correctAnswer = rec.CorrectAnswer
+		allAnswers = rec.IncorrectAnswers
+		allAnswers = append(allAnswers, correctAnswer)
+		rand.Shuffle(len(allAnswers), func(i, j int) { allAnswers[i], allAnswers[j] = allAnswers[j], allAnswers[i] })
+	}
+	fmt.Println(correctAnswer)
+
+	for index := range allAnswers {
+		triviaCustomID := "triviaIndex_" + fmt.Sprintf("%d", index)
+		triviaBtn = append(triviaBtn, triviaCustomID)
+	}
+
+}
+
+func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	TriviaAPI(&question, &correctAnswer, &allAnswers, &triviaBtn)
 
 	btnEmoji := []string{"1️⃣", "2️⃣", "3️⃣", "4️⃣"}
 	components := []discordgo.MessageComponent{}
@@ -52,62 +96,32 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			},
 		},
 	}
-
 	err := s.InteractionRespond(i.Interaction, triviaMessage)
 	if err != nil {
 		fmt.Println("Could not send the trivia question")
 	}
 }
 
-func TriviaAPI() (string, int, []string) {
-	resp, err := http.Get("https://opentdb.com/api.php?amount=1&category=9&type=multiple")
-	if err != nil {
-		fmt.Println("Could not fetch trivia api", err.Error())
-	}
+func TriviaAnswer(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	// storing the custom ID after the user clicks on any button.
+	btnCustomID := i.MessageComponentData().CustomID
 
-	body, err := ioutil.ReadAll(resp.Body)
+	// importing data
+	TriviaAPI(&question, &correctAnswer, &allAnswers, &triviaBtn)
 
-	if err != nil {
-		panic(err.Error())
-	}
-
-	var data triviaApi
-
-	// unmarshall
-	json.Unmarshal(body, &data)
-
-	// General Knowledge category
-	// Loop through the Results node for the Question
-	var question string
-	var correctAnswer string
-	var allAnswers []string
-	for _, rec := range data.Results {
-		question = rec.Question
-		question = strings.ReplaceAll(question, "&quot;", "`")
-		question = strings.ReplaceAll(question, "&#039;", "'")
-		correctAnswer = rec.CorrectAnswer
-		allAnswers = rec.IncorrectAnswers
-		allAnswers = append(allAnswers, correctAnswer)
-		rand.Shuffle(len(allAnswers), func(i, j int) { allAnswers[i], allAnswers[j] = allAnswers[j], allAnswers[i] })
-	}
-
-	fmt.Println(correctAnswer)
-
-	// Finding the correctAnswer index in allAnswers string array
+	// Finding element index
 	correctAnswerIndex := util.Find(allAnswers, correctAnswer)
+	btnCustomIDIndex := util.Find(triviaBtn, btnCustomID)
 
-	return question, correctAnswerIndex, allAnswers
-}
+	fmt.Println("correctAnswerIndex", correctAnswerIndex)
+	fmt.Println("btnCustomIDIndex", btnCustomIDIndex)
 
-func TriviaAnswer(selectedAnsIndex int) string {
-	_, correctAnswerIndex, allAnswers := TriviaAPI()
-	selectedAnswer := allAnswers[selectedAnsIndex]
 	var btnResp string
-	if selectedAnsIndex == correctAnswerIndex {
-		btnResp = fmt.Sprintf("🎊 The correct answer was indeed %s.", selectedAnswer)
+	if btnCustomIDIndex == correctAnswerIndex {
+		btnResp = fmt.Sprintf("🎊 The correct answer was indeed %s.", correctAnswer)
+		s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
 	} else {
-		btnResp = fmt.Sprintf("%s in incorrect unfortunetlly. 😞", selectedAnswer)
+		btnResp = fmt.Sprintf("%s in incorrect unfortunetlly. 😞", allAnswers[btnCustomIDIndex])
+		s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
 	}
-
-	return btnResp
 }

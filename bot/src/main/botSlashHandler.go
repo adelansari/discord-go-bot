@@ -2,7 +2,6 @@ package bot
 
 import (
 	slashCommand "discord-go-bot/bot/src/slashCommands"
-	util "discord-go-bot/bot/src/utils"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -10,36 +9,16 @@ import (
 var (
 	componentHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
 		"triviaIndex_0": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			selectedAnsIndex := 0
-			btnResp := slashCommand.TriviaAnswer(selectedAnsIndex)
-			err := s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
-			if err != nil {
-				panic(err)
-			}
+			slashCommand.TriviaAnswer(s, i)
 		},
 		"triviaIndex_1": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			selectedAnsIndex := 1
-			btnResp := slashCommand.TriviaAnswer(selectedAnsIndex)
-			err := s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
-			if err != nil {
-				panic(err)
-			}
+			slashCommand.TriviaAnswer(s, i)
 		},
 		"triviaIndex_2": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			selectedAnsIndex := 2
-			btnResp := slashCommand.TriviaAnswer(selectedAnsIndex)
-			err := s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
-			if err != nil {
-				panic(err)
-			}
+			slashCommand.TriviaAnswer(s, i)
 		},
 		"triviaIndex_3": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			selectedAnsIndex := 3
-			btnResp := slashCommand.TriviaAnswer(selectedAnsIndex)
-			err := s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
-			if err != nil {
-				panic(err)
-			}
+			slashCommand.TriviaAnswer(s, i)
 		},
 	}
 
