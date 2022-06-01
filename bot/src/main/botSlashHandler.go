@@ -1,48 +1,59 @@
 package bot
 
 import (
-	slash "discord-go-bot/bot/src/slashCommands"
+	slashCommand "discord-go-bot/bot/src/slashCommands"
+	util "discord-go-bot/bot/src/utils"
+	"fmt"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-func (scmSlash *SlashFeature) Ping(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	slash.PingSlash(s, i)
-}
+var (
+	componentHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
+		"triviaIndex_0": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			fmt.Println(i.MessageComponentData())
+		},
+		"triviaIndex_1": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			fmt.Println(i.Interaction, util.MessageContentResponse("You clicked on the second option."))
+		},
+		"triviaIndex_2": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			fmt.Println(i.Interaction, util.MessageContentResponse("You clicked on the third option."))
+		},
+		"triviaIndex_3": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			fmt.Println(i.Interaction, util.MessageContentResponse("You clicked on the forth option."))
+		},
+	}
 
-func (scmSlash *SlashFeature) Pong(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	slash.PongSlash(s, i)
-}
-
-func (scmSlash *SlashFeature) DadJoke(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	slash.DadJokesSlash(s, i)
-}
-
-func (scmSlash *SlashFeature) Jokes(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	slash.JokesSlash(s, i)
-}
-
-func (scmSlash *SlashFeature) Meme(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	slash.MemeSlash(s, i)
-}
-
-func (scmSlash *SlashFeature) Giveaway(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	slash.GiveawaySlash(s, i)
-}
-
-func (scmSlash *SlashFeature) handleSay(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	slash.SaySlash(s, i)
-}
-
-func (scmSlash *SlashFeature) Invite(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	slash.InviteSlash(s, i)
-}
-
-func (scmSlash *SlashFeature) MagicBall(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	slash.MagicBallSlash(s, i)
-}
-
-func (scmSlash *SlashFeature) Trivia(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	slash.TriviaSlash(s, i)
-
-}
+	commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
+		"ping": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			slashCommand.PingSlash(s, i)
+		},
+		"pong": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			slashCommand.PongSlash(s, i)
+		},
+		"joke": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			slashCommand.JokesSlash(s, i)
+		},
+		"dad-joke": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			slashCommand.DadJokesSlash(s, i)
+		},
+		"meme": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			slashCommand.MemeSlash(s, i)
+		},
+		"invite": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			slashCommand.InviteSlash(s, i)
+		},
+		"giveaway": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			slashCommand.GiveawaySlash(s, i)
+		},
+		"say": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			slashCommand.SaySlash(s, i)
+		},
+		"8-ball": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			slashCommand.MagicBallSlash(s, i)
+		},
+		"trivia": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			slashCommand.TriviaSlash(s, i)
+		},
+	}
+)

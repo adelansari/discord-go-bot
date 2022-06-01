@@ -65,7 +65,7 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			},
 			Label:    element,
 			Style:    discordgo.SecondaryButton,
-			CustomID: "buttonIndex_" + fmt.Sprintf("%d", index),
+			CustomID: "triviaIndex_" + fmt.Sprintf("%d", index),
 		}
 		components = append(components, btn)
 	}
@@ -85,20 +85,4 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	if err != nil {
 		fmt.Println("Could not send the trivia question")
 	}
-
-	for i.Interaction.Type == discordgo.InteractionMessageComponent {
-		buttonInter := i.Interaction.Type
-		fmt.Println(buttonInter)
-	}
-
-	// if i.Interaction.Type == discordgo.InteractionMessageComponent {
-	// 	fmt.Println(i.MessageComponentData().CustomID)
-	// }
-
-	// switch i.Type {
-	// case discordgo.InteractionMessageComponent:
-	// 	// msgInteraction, _ := s.InteractionResponse(i.Interaction)
-	// 	// fmt.Println(msgInteraction)
-
-	// }
 }
