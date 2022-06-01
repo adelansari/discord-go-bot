@@ -23,6 +23,18 @@ func PrettyStruct(data interface{}) (string, error) {
 	return string(val), nil
 }
 
+// Find element in slice/array with linear search
+func Find(a []string, x string) int {
+	// Return the smallest index i at which x == a[i]
+	for i, n := range a {
+		if x == n {
+			return i
+		}
+	}
+	// Return len(a) if there is no such index
+	return len(a)
+}
+
 // Responding to interaction with a message
 func MessageContentResponse(c string) *discordgo.InteractionResponse {
 	return &discordgo.InteractionResponse{

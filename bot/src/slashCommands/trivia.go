@@ -1,6 +1,7 @@
 package slashCommand
 
 import (
+	util "discord-go-bot/bot/src/utils"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -25,6 +26,40 @@ type triviaApi struct {
 
 func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
+	question, _, allAnswers := TriviaAPI()
+
+	btnEmoji := []string{"1️⃣", "2️⃣", "3️⃣", "4️⃣"}
+	components := []discordgo.MessageComponent{}
+	for index, element := range allAnswers {
+		btn := discordgo.Button{
+			Emoji: discordgo.ComponentEmoji{
+				Name: btnEmoji[index],
+			},
+			Label:    element,
+			Style:    discordgo.SecondaryButton,
+			CustomID: "triviaIndex_" + fmt.Sprintf("%d", index),
+		}
+		components = append(components, btn)
+	}
+	triviaMessage := &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Content: question,
+			Components: []discordgo.MessageComponent{
+				discordgo.ActionsRow{
+					Components: components,
+				},
+			},
+		},
+	}
+
+	err := s.InteractionRespond(i.Interaction, triviaMessage)
+	if err != nil {
+		fmt.Println("Could not send the trivia question")
+	}
+}
+
+func TriviaAPI() (string, int, []string) {
 	resp, err := http.Get("https://opentdb.com/api.php?amount=1&category=9&type=multiple")
 	if err != nil {
 		fmt.Println("Could not fetch trivia api", err.Error())
@@ -56,33 +91,23 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		rand.Shuffle(len(allAnswers), func(i, j int) { allAnswers[i], allAnswers[j] = allAnswers[j], allAnswers[i] })
 	}
 
-	btnEmoji := []string{"1️⃣", "2️⃣", "3️⃣", "4️⃣"}
-	components := []discordgo.MessageComponent{}
-	for index, element := range allAnswers {
-		btn := discordgo.Button{
-			Emoji: discordgo.ComponentEmoji{
-				Name: btnEmoji[index],
-			},
-			Label:    element,
-			Style:    discordgo.SecondaryButton,
-			CustomID: "triviaIndex_" + fmt.Sprintf("%d", index),
-		}
-		components = append(components, btn)
-	}
-	triviaMessage := &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseChannelMessageWithSource,
-		Data: &discordgo.InteractionResponseData{
-			Content: question,
-			Components: []discordgo.MessageComponent{
-				discordgo.ActionsRow{
-					Components: components,
-				},
-			},
-		},
+	fmt.Println(correctAnswer)
+
+	// Finding the correctAnswer index in allAnswers string array
+	correctAnswerIndex := util.Find(allAnswers, correctAnswer)
+
+	return question, correctAnswerIndex, allAnswers
+}
+
+func TriviaAnswer(selectedAnsIndex int) string {
+	_, correctAnswerIndex, allAnswers := TriviaAPI()
+	selectedAnswer := allAnswers[selectedAnsIndex]
+	var btnResp string
+	if selectedAnsIndex == correctAnswerIndex {
+		btnResp = fmt.Sprintf("🎊 The correct answer was indeed %s.", selectedAnswer)
+	} else {
+		btnResp = fmt.Sprintf("%s in incorrect unfortunetlly. 😞", selectedAnswer)
 	}
 
-	err = s.InteractionRespond(i.Interaction, triviaMessage)
-	if err != nil {
-		fmt.Println("Could not send the trivia question")
-	}
+	return btnResp
 }
