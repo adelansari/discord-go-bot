@@ -29,6 +29,7 @@ var (
 	allAnswers    []string
 	triviaBtn     []string
 	btnEmoji      []string
+	question      string
 )
 
 func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -53,7 +54,7 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 		// General Knowledge category
 		// Loop through the Results node for the Question
-		var question string
+
 		for _, rec := range data.Results {
 			question = rec.Question
 			question = strings.ReplaceAll(question, "&quot;", "`")
@@ -99,6 +100,9 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			fmt.Println("Could not send the trivia question")
 		}
 	case discordgo.InteractionMessageComponent:
+
+		s.ChannelMessageDelete(i.ChannelID, i.Message.ID)
+
 		// storing the custom ID after the user clicks on any button.
 		btnCustomID := i.MessageComponentData().CustomID
 
@@ -136,7 +140,7 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 		var btnResp string
 		if btnCustomIDIndex == correctAnswerIndex {
-			btnResp = fmt.Sprintf("🎊 The correct answer was indeed %s.", correctAnswer)
+			btnResp = fmt.Sprintf(question+"\n🎊 The correct answer was indeed %s.", correctAnswer)
 			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
@@ -149,7 +153,7 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				},
 			})
 		} else {
-			btnResp = fmt.Sprintf("%s is incorrect unfortunately. 😞", allAnswers[btnCustomIDIndex])
+			btnResp = fmt.Sprintf(question+"\n%s is incorrect unfortunately. 😞", allAnswers[btnCustomIDIndex])
 			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
