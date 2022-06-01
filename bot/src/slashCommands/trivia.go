@@ -101,7 +101,7 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		}
 	case discordgo.InteractionMessageComponent:
 
-		s.ChannelMessageDelete(i.ChannelID, i.Message.ID)
+		//s.ChannelMessageDelete(i.ChannelID, i.Message.ID)
 
 		// storing the custom ID after the user clicks on any button.
 		btnCustomID := i.MessageComponentData().CustomID
@@ -141,27 +141,27 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		var btnResp string
 		if btnCustomIDIndex == correctAnswerIndex {
 			btnResp = fmt.Sprintf(question+"\n🎊 The correct answer was indeed %s.", correctAnswer)
-			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionResponseData{
-					Content: btnResp,
-					Components: []discordgo.MessageComponent{
-						discordgo.ActionsRow{
-							Components: components,
-						},
+			s.ChannelMessageEditComplex(&discordgo.MessageEdit{
+				Content: &btnResp,
+				ID:      i.Message.ID,
+				Channel: i.ChannelID,
+				Flags:   discordgo.MessageFlagsLoading,
+				Components: []discordgo.MessageComponent{
+					discordgo.ActionsRow{
+						Components: components,
 					},
 				},
 			})
 		} else {
 			btnResp = fmt.Sprintf(question+"\n%s is incorrect unfortunately. 😞", allAnswers[btnCustomIDIndex])
-			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionResponseData{
-					Content: btnResp,
-					Components: []discordgo.MessageComponent{
-						discordgo.ActionsRow{
-							Components: components,
-						},
+			s.ChannelMessageEditComplex(&discordgo.MessageEdit{
+				Content: &btnResp,
+				ID:      i.Message.ID,
+				Channel: i.ChannelID,
+				Flags:   discordgo.MessageFlagsLoading,
+				Components: []discordgo.MessageComponent{
+					discordgo.ActionsRow{
+						Components: components,
 					},
 				},
 			})
