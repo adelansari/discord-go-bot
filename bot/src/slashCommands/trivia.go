@@ -149,7 +149,7 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				},
 			})
 		} else {
-			btnResp = fmt.Sprintf("%s is incorrect unfortunetlly. 😞", allAnswers[btnCustomIDIndex])
+			btnResp = fmt.Sprintf("%s is incorrect unfortunately. 😞", allAnswers[btnCustomIDIndex])
 			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
