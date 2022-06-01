@@ -28,6 +28,7 @@ var (
 	correctAnswer string
 	allAnswers    []string
 	triviaBtn     []string
+	btnEmoji      []string
 )
 
 func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -69,7 +70,7 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			triviaCustomID := "triviaIndex_" + fmt.Sprintf("%d", index)
 			triviaBtn = append(triviaBtn, triviaCustomID)
 		}
-		btnEmoji := []string{"1️⃣", "2️⃣", "3️⃣", "4️⃣"}
+		btnEmoji = []string{"1️⃣", "2️⃣", "3️⃣", "4️⃣"}
 		components := []discordgo.MessageComponent{}
 		for index, element := range allAnswers {
 			btn := discordgo.Button{
@@ -105,15 +106,62 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		correctAnswerIndex := util.Find(allAnswers, correctAnswer)
 		btnCustomIDIndex := util.Find(triviaBtn, btnCustomID)
 
+		components := []discordgo.MessageComponent{}
+		var btn discordgo.Button
+		for index, element := range allAnswers {
+			if index == correctAnswerIndex {
+				btn = discordgo.Button{
+					Emoji: discordgo.ComponentEmoji{
+						Name: btnEmoji[index],
+					},
+					Label:    element,
+					Disabled: true,
+					Style:    discordgo.SuccessButton,
+					CustomID: triviaBtn[index],
+				}
+			} else {
+				btn = discordgo.Button{
+					Emoji: discordgo.ComponentEmoji{
+						Name: btnEmoji[index],
+					},
+					Label:    element,
+					Style:    discordgo.DangerButton,
+					Disabled: true,
+					CustomID: triviaBtn[index],
+				}
+			}
+
+			components = append(components, btn)
+		}
+
 		var btnResp string
 		if btnCustomIDIndex == correctAnswerIndex {
 			btnResp = fmt.Sprintf("🎊 The correct answer was indeed %s.", correctAnswer)
-			s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
+			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Content: btnResp,
+					Components: []discordgo.MessageComponent{
+						discordgo.ActionsRow{
+							Components: components,
+						},
+					},
+				},
+			})
 		} else {
-			btnResp = fmt.Sprintf("%s in incorrect unfortunetlly. 😞", allAnswers[btnCustomIDIndex])
-			s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
+			btnResp = fmt.Sprintf("%s is incorrect unfortunetlly. 😞", allAnswers[btnCustomIDIndex])
+			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Content: btnResp,
+					Components: []discordgo.MessageComponent{
+						discordgo.ActionsRow{
+							Components: components,
+						},
+					},
+				},
+			})
 		}
-
 	}
 
 }
