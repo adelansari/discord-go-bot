@@ -127,6 +127,26 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 				Description: "Displays a multiple choice trivia questions from General Knowledge category.",
 			},
 		},
+		{
+			Type:     discordgo.InteractionMessageComponent,
+			Handler:  scmSlash.TriviaComponent,
+			CustomID: "triviaIndex_0",
+		},
+		{
+			Type:     discordgo.InteractionMessageComponent,
+			Handler:  scmSlash.TriviaComponent,
+			CustomID: "triviaIndex_1",
+		},
+		{
+			Type:     discordgo.InteractionMessageComponent,
+			Handler:  scmSlash.TriviaComponent,
+			CustomID: "triviaIndex_2",
+		},
+		{
+			Type:     discordgo.InteractionMessageComponent,
+			Handler:  scmSlash.TriviaComponent,
+			CustomID: "triviaIndex_3",
+		},
 	}
 
 	// featurePointer := &slashfeatures

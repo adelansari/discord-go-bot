@@ -23,7 +23,7 @@ type triviaApi struct {
 	} `json:"results"`
 }
 
-func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
+func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) ([]string, string, []string) {
 
 	resp, err := http.Get("https://opentdb.com/api.php?amount=1&category=9&type=multiple")
 	if err != nil {
@@ -56,6 +56,13 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		rand.Shuffle(len(allAnswers), func(i, j int) { allAnswers[i], allAnswers[j] = allAnswers[j], allAnswers[i] })
 	}
 
+	fmt.Println(correctAnswer)
+
+	triviaBtn := []string{}
+	for index := range allAnswers {
+		triviaCustomID := "triviaIndex_" + fmt.Sprintf("%d", index)
+		triviaBtn = append(triviaBtn, triviaCustomID)
+	}
 	btnEmoji := []string{"1️⃣", "2️⃣", "3️⃣", "4️⃣"}
 	components := []discordgo.MessageComponent{}
 	for index, element := range allAnswers {
@@ -65,7 +72,7 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			},
 			Label:    element,
 			Style:    discordgo.SecondaryButton,
-			CustomID: "buttonIndex_" + fmt.Sprintf("%d", index),
+			CustomID: triviaBtn[index],
 		}
 		components = append(components, btn)
 	}
@@ -86,19 +93,6 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		fmt.Println("Could not send the trivia question")
 	}
 
-	for i.Interaction.Type == discordgo.InteractionMessageComponent {
-		buttonInter := i.Interaction.Type
-		fmt.Println(buttonInter)
-	}
+	return allAnswers, correctAnswer, triviaBtn
 
-	// if i.Interaction.Type == discordgo.InteractionMessageComponent {
-	// 	fmt.Println(i.MessageComponentData().CustomID)
-	// }
-
-	// switch i.Type {
-	// case discordgo.InteractionMessageComponent:
-	// 	// msgInteraction, _ := s.InteractionResponse(i.Interaction)
-	// 	// fmt.Println(msgInteraction)
-
-	// }
 }
