@@ -70,58 +70,67 @@ func TriviaAPI(*string, *string, *[]string, *[]string) {
 }
 
 func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	TriviaAPI(&question, &correctAnswer, &allAnswers, &triviaBtn)
 
-	btnEmoji := []string{"1️⃣", "2️⃣", "3️⃣", "4️⃣"}
-	components := []discordgo.MessageComponent{}
-	for index, element := range allAnswers {
-		btn := discordgo.Button{
-			Emoji: discordgo.ComponentEmoji{
-				Name: btnEmoji[index],
-			},
-			Label:    element,
-			Style:    discordgo.SecondaryButton,
-			CustomID: "triviaIndex_" + fmt.Sprintf("%d", index),
+	switch i.Type {
+	case discordgo.InteractionApplicationCommand:
+
+		TriviaAPI(&question, &correctAnswer, &allAnswers, &triviaBtn)
+
+		btnEmoji := []string{"1️⃣", "2️⃣", "3️⃣", "4️⃣"}
+		components := []discordgo.MessageComponent{}
+		for index, element := range allAnswers {
+			btn := discordgo.Button{
+				Emoji: discordgo.ComponentEmoji{
+					Name: btnEmoji[index],
+				},
+				Label:    element,
+				Style:    discordgo.SecondaryButton,
+				CustomID: "triviaIndex_" + fmt.Sprintf("%d", index),
+			}
+			components = append(components, btn)
 		}
-		components = append(components, btn)
-	}
-	triviaMessage := &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseChannelMessageWithSource,
-		Data: &discordgo.InteractionResponseData{
-			Content: question,
-			Components: []discordgo.MessageComponent{
-				discordgo.ActionsRow{
-					Components: components,
+		triviaMessage := &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: question,
+				Components: []discordgo.MessageComponent{
+					discordgo.ActionsRow{
+						Components: components,
+					},
 				},
 			},
-		},
-	}
-	err := s.InteractionRespond(i.Interaction, triviaMessage)
-	if err != nil {
-		fmt.Println("Could not send the trivia question")
-	}
-}
+		}
+		err := s.InteractionRespond(i.Interaction, triviaMessage)
+		if err != nil {
+			fmt.Println("Could not send the trivia question")
+		}
+	case discordgo.InteractionMessageComponent:
+		// storing the custom ID after the user clicks on any button.
+		btnCustomID := i.MessageComponentData().CustomID
 
-func TriviaAnswer(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	// storing the custom ID after the user clicks on any button.
-	btnCustomID := i.MessageComponentData().CustomID
+		// Finding element index
+		correctAnswerIndex := util.Find(allAnswers, correctAnswer)
+		btnCustomIDIndex := util.Find(triviaBtn, btnCustomID)
 
-	// importing data
-	TriviaAPI(&question, &correctAnswer, &allAnswers, &triviaBtn)
+		fmt.Println("correctAnswerIndex", correctAnswerIndex)
+		fmt.Println("btnCustomIDIndex", btnCustomIDIndex)
 
-	// Finding element index
-	correctAnswerIndex := util.Find(allAnswers, correctAnswer)
-	btnCustomIDIndex := util.Find(triviaBtn, btnCustomID)
-
-	fmt.Println("correctAnswerIndex", correctAnswerIndex)
-	fmt.Println("btnCustomIDIndex", btnCustomIDIndex)
-
-	var btnResp string
-	if btnCustomIDIndex == correctAnswerIndex {
-		btnResp = fmt.Sprintf("🎊 The correct answer was indeed %s.", correctAnswer)
-		s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
-	} else {
-		btnResp = fmt.Sprintf("%s in incorrect unfortunetlly. 😞", allAnswers[btnCustomIDIndex])
-		s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
+		var btnResp string
+		if btnCustomIDIndex == correctAnswerIndex {
+			btnResp = fmt.Sprintf("🎊 The correct answer was indeed %s.", correctAnswer)
+			s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
+		} else {
+			btnResp = fmt.Sprintf("%s in incorrect unfortunetlly. 😞", allAnswers[btnCustomIDIndex])
+			s.InteractionRespond(i.Interaction, util.MessageContentResponse(btnResp))
+		}
 	}
 }
+
+// func TriviaAnswer(s *discordgo.Session, i *discordgo.InteractionCreate) {
+// 	// storing the custom ID after the user clicks on any button.
+// 	btnCustomID := i.MessageComponentData().CustomID
+
+// 	// importing data
+// 	TriviaAPI(&question, &correctAnswer, &allAnswers, &triviaBtn)
+
+// }

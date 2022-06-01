@@ -9,16 +9,16 @@ import (
 var (
 	componentHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
 		"triviaIndex_0": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			slashCommand.TriviaAnswer(s, i)
+			slashCommand.TriviaSlash(s, i)
 		},
 		"triviaIndex_1": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			slashCommand.TriviaAnswer(s, i)
+			slashCommand.TriviaSlash(s, i)
 		},
 		"triviaIndex_2": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			slashCommand.TriviaAnswer(s, i)
+			slashCommand.TriviaSlash(s, i)
 		},
 		"triviaIndex_3": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			slashCommand.TriviaAnswer(s, i)
+			slashCommand.TriviaSlash(s, i)
 		},
 	}
 
