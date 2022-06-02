@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -13,6 +14,7 @@ import (
 const apiLink = "https://api.api-ninjas.com/v1/"
 const dataLimit = "?limit="
 const memeApiLink = "https://meme-api.herokuapp.com/gimme"
+const triviaApiLink = "https://opentdb.com/api.php?amount=1&category=9&type=multiple"
 
 // JSON pretty print by marshaling value
 func PrettyStruct(data interface{}) (string, error) {
@@ -66,8 +68,21 @@ func MemeApiData() []byte {
 	return getFromUrl(req)
 }
 
+func TriviaApiData() []byte {
+	req, err := http.NewRequest("GET", triviaApiLink, nil)
+	if err != nil {
+		fmt.Print(err.Error())
+	}
+	return getFromUrl(req)
+}
+
 func getFromUrl(req *http.Request) []byte {
-	client := http.Client{}
+	tr := &http.Transport{
+		MaxIdleConns:       10,
+		IdleConnTimeout:    30 * time.Second,
+		DisableCompression: true,
+	}
+	client := &http.Client{Transport: tr}
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Print(err.Error())
