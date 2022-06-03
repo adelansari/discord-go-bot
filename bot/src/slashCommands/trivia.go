@@ -4,8 +4,7 @@ import (
 	util "discord-go-bot/bot/src/utils"
 	"encoding/json"
 	"fmt"
-	"math/rand"
-	"strings"
+	"html"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -42,13 +41,23 @@ func createQuestion(s *discordgo.Session, i *discordgo.InteractionCreate) *disco
 
 	for _, rec := range data.Results {
 		question = rec.Question
-		question = strings.ReplaceAll(question, "&quot;", "`")
-		question = strings.ReplaceAll(question, "&#039;", "'")
+		// question = strings.ReplaceAll(question, "&quot;", "`")
+		// question = strings.ReplaceAll(question, "&#039;", "'")
 		correctAnswer = rec.CorrectAnswer
 		allAnswers = rec.IncorrectAnswers
 		allAnswers = append(allAnswers, correctAnswer)
-		rand.Shuffle(len(allAnswers), func(i, j int) { allAnswers[i], allAnswers[j] = allAnswers[j], allAnswers[i] })
 	}
+	// rand.Shuffle(len(allAnswers), func(i, j int) { allAnswers[i], allAnswers[j] = allAnswers[j], allAnswers[i] })
+
+	// Unescaping entities and cleaning up the HTML special character codes:
+	question = html.UnescapeString(question)
+	correctAnswer = html.UnescapeString(correctAnswer)
+	for index := range allAnswers {
+		allAnswers[index] = html.UnescapeString(allAnswers[index])
+	}
+
+	// Suffling allAnswers elements because the previous method was not random
+	util.Shuffle(allAnswers)
 
 	fmt.Println(correctAnswer)
 
@@ -72,7 +81,7 @@ func createQuestion(s *discordgo.Session, i *discordgo.InteractionCreate) *disco
 	triviaMessage := &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
-			Content: question,
+			Content: "**" + question + "**", // to make the text bold
 			Components: []discordgo.MessageComponent{
 				discordgo.ActionsRow{
 					Components: components,
@@ -116,13 +125,23 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					Style:    discordgo.SuccessButton,
 					CustomID: triviaBtn[index],
 				}
-			} else {
+			} else if index == btnCustomIDIndex && btnCustomIDIndex != correctAnswerIndex {
 				btn = discordgo.Button{
 					Emoji: discordgo.ComponentEmoji{
 						Name: btnEmoji[index],
 					},
 					Label:    element,
 					Style:    discordgo.DangerButton,
+					Disabled: true,
+					CustomID: triviaBtn[index],
+				}
+			} else {
+				btn = discordgo.Button{
+					Emoji: discordgo.ComponentEmoji{
+						Name: btnEmoji[index],
+					},
+					Label:    element,
+					Style:    discordgo.SecondaryButton,
 					Disabled: true,
 					CustomID: triviaBtn[index],
 				}
@@ -133,7 +152,7 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 		var btnResp string
 		if btnCustomIDIndex == correctAnswerIndex {
-			btnResp = fmt.Sprintf(question+"\n🎊 The correct answer was indeed %s.", correctAnswer)
+			btnResp = fmt.Sprintf("**"+question+"**"+"\n🎊 The correct answer was indeed %s.", correctAnswer)
 			s.ChannelMessageEditComplex(&discordgo.MessageEdit{
 				Content: &btnResp,
 				ID:      i.Message.ID,
@@ -150,7 +169,7 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				fmt.Println("Could not send the trivia question", err.Error())
 			}
 		} else {
-			btnResp = fmt.Sprintf(question+"\n%s is incorrect unfortunately. 😞", allAnswers[btnCustomIDIndex])
+			btnResp = fmt.Sprintf("**"+question+"**"+"\n%s is incorrect unfortunately. 😞", allAnswers[btnCustomIDIndex])
 			s.ChannelMessageEditComplex(&discordgo.MessageEdit{
 				Content: &btnResp,
 				ID:      i.Message.ID,

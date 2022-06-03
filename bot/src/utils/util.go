@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"os"
 	"time"
@@ -35,6 +36,17 @@ func Find(a []string, x string) int {
 	}
 	// Return len(a) if there is no such index
 	return len(a)
+}
+
+// Shuffle a string array elements
+func Shuffle(vals []string) {
+	r := rand.New(rand.NewSource(time.Now().Unix()))
+	for len(vals) > 0 {
+		n := len(vals)
+		randIndex := r.Intn(n)
+		vals[n-1], vals[randIndex] = vals[randIndex], vals[n-1]
+		vals = vals[:n-1]
+	}
 }
 
 // Responding to interaction with a message
