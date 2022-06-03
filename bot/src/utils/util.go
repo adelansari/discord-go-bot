@@ -83,7 +83,7 @@ func MemeApiData() []byte {
 func TriviaApiData() []byte {
 	req, err := http.NewRequest("GET", triviaApiLink, nil)
 	if err != nil {
-		fmt.Print(err.Error())
+		fmt.Print("Could not fetch trivia api", err.Error())
 	}
 	return getFromUrl(req)
 }

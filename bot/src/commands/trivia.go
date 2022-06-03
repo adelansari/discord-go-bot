@@ -2,10 +2,10 @@ package commands
 
 import (
 	// util "discord-go-bot/bot/src/utils"
+	util "discord-go-bot/bot/src/utils"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
+	"html"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -24,21 +24,10 @@ type triviaApi struct {
 
 func Trivia(s *discordgo.Session, m *discordgo.MessageCreate) {
 
-	resp, err := http.Get("https://opentdb.com/api.php?amount=1&category=9&type=multiple")
-	if err != nil {
-		fmt.Println("Could not fetch trivia api", err.Error())
-	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
-		panic(err.Error())
-	}
-
 	var data triviaApi
 
 	// unmarshall
-	json.Unmarshal(body, &data)
+	json.Unmarshal(util.TriviaApiData(), &data)
 
 	// General Knowledge category
 	// Loop through the Results node for the Question
@@ -51,6 +40,16 @@ func Trivia(s *discordgo.Session, m *discordgo.MessageCreate) {
 		allAnswers = rec.IncorrectAnswers
 		allAnswers = append(allAnswers, correctAnswer)
 	}
+
+	// Unescaping entities and cleaning up the HTML special character codes:
+	question = html.UnescapeString(question)
+	correctAnswer = html.UnescapeString(correctAnswer)
+	for index := range allAnswers {
+		allAnswers[index] = html.UnescapeString(allAnswers[index])
+	}
+
+	// Suffling allAnswers elements because the previous method was not random
+	util.Shuffle(allAnswers)
 
 	// var triviaMap map[string]interface{}
 	// err = json.NewDecoder(resp.Body).Decode(&triviaMap)
@@ -82,7 +81,7 @@ func Trivia(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// triviaMessage.Components[0].(*discordgo.ActionsRow).Components
 
-	_, err = s.ChannelMessageSendComplex(m.ChannelID, triviaMessage)
+	_, err := s.ChannelMessageSendComplex(m.ChannelID, triviaMessage)
 	if err != nil {
 		panic(err.Error())
 	}
