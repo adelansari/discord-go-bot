@@ -1,0 +1,23 @@
+package spreadsheetDB
+
+import (
+	"context"
+	"log"
+
+	"google.golang.org/api/option"
+	"google.golang.org/api/sheets/v4"
+)
+
+const (
+	client_secret_path = "./credentials.json"
+)
+
+func GoogleSheetClient() *sheets.Service {
+	ctx := context.Background()
+	sheetsService, err := sheets.NewService(ctx, option.WithCredentialsFile(client_secret_path), option.WithScopes(sheets.SpreadsheetsScope))
+	if err != nil {
+		log.Fatalf("Unable to retrieve Sheets client: %v", err)
+	}
+
+	return sheetsService
+}

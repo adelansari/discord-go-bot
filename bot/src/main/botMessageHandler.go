@@ -46,6 +46,10 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 			commands.MagicBall8(s, m)
 		case BotPrefix + "trivia":
 			commands.Trivia(s, m)
+		case BotPrefix + "facts":
+			commands.Facts(s, m)
+		case BotPrefix + "factstimer":
+			commands.FactsTimer(s, m)
 		case "hi":
 			s.ChannelMessageSend(m.ChannelID, "Hello!")
 		case "hello":

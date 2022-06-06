@@ -17,6 +17,9 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 			"`.joke`   -  Displays a random joke.\n"+
 			"`.8ball`   -  Answer to all your [yes/no] questions.\n"+
 			"`.trivia`   -  Shows general trivia miltiple choice questions.\n"+
+			"`.meme`   -  Embeds a random meme image.\n"+
+			"`.facts`   -  Iterate through a list of cool facts.\n"+
+			"`.factstimer`   -  Sends a fact every 12 hours.\n"+
 
 			"\nMisc. Commands:\n"+
 			"`.ping`    -  To ping the bot!\n"+

@@ -17,3 +17,7 @@
 # Bot tokens
 config.json
 .env
+
+# Google Sheet links and credential
+credentials.json
+bot/src/utils/googlesheet/googleSheetUrls.go.backup

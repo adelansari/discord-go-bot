@@ -88,6 +88,22 @@ func TriviaApiData() []byte {
 	return getFromUrl(req)
 }
 
+func FactsData() []byte {
+	// Open facts.json file
+	factsFile, err := os.Open("./bot/src/utils/facts.json")
+	// if we os.Open returns an error then handle it
+	if err != nil {
+		fmt.Println("could not open the facts.json file.", err)
+	}
+	// defer the closing of our factsFile so that we can parse it later on
+	defer factsFile.Close()
+
+	factsByteValue, _ := ioutil.ReadAll(factsFile)
+
+	return factsByteValue
+
+}
+
 func getFromUrl(req *http.Request) []byte {
 	tr := &http.Transport{
 		MaxIdleConns:       10,
