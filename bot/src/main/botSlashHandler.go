@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"discord-go-bot/bot/src/commands"
 	slash "discord-go-bot/bot/src/slashCommands"
 
 	"github.com/bwmarrin/discordgo"
@@ -23,7 +24,7 @@ func (scmSlash *SlashFeature) Jokes(s *discordgo.Session, i *discordgo.Interacti
 }
 
 func (scmSlash *SlashFeature) Meme(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	slash.MemeSlash(s, i)
+	commands.MemeSlash(s, i)
 }
 
 func (scmSlash *SlashFeature) Giveaway(s *discordgo.Session, i *discordgo.InteractionCreate) {
