@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html"
+	"strconv"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -30,6 +31,7 @@ var (
 	triviaNumbersInt    int64
 	triviaNumbIteration int64
 	numCorrectAns       int
+	userInputLimit      int64 = 20
 )
 
 func createQuestion(s *discordgo.Session, i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
@@ -103,8 +105,8 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		// retreiving the trivia iteration number:
 		triviaNumbersInt = i.ApplicationCommandData().Options[0].IntValue()
 
-		if (triviaNumbersInt <= 0) || (triviaNumbersInt > 20) {
-			endOfTrivia := fmt.Sprintf("Please enter a valid number between 1 and 100")
+		if (triviaNumbersInt <= 0) || (triviaNumbersInt > userInputLimit) {
+			endOfTrivia := fmt.Sprintf("Please enter a valid number between 1 and ") + strconv.FormatInt(userInputLimit, 10)
 			err := s.InteractionRespond(i.Interaction, util.MessageContentResponse(endOfTrivia))
 			if err != nil {
 				fmt.Println("Could not end the trivia", err.Error())
