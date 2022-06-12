@@ -127,7 +127,7 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 				Description: "Displays a multiple choice trivia questions from General Knowledge category.",
 				Options: []*discordgo.ApplicationCommandOption{
 					{
-						Type:        discordgo.ApplicationCommandOptionString,
+						Type:        discordgo.ApplicationCommandOptionInteger,
 						Name:        "number",
 						Description: "Number of trivia questions?",
 						Required:    true,

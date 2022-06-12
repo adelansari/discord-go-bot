@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"html"
-	"strconv"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -28,8 +27,8 @@ var (
 	triviaBtn           []string
 	btnEmoji            []string
 	question            string
-	triviaNumbersInt    int
-	triviaNumbIteration int
+	triviaNumbersInt    int64
+	triviaNumbIteration int64
 	numCorrectAns       int
 )
 
@@ -102,10 +101,8 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	case discordgo.InteractionApplicationCommand:
 
 		// retreiving the trivia iteration number:
-		triviaNumbers := i.ApplicationCommandData().Options[0].StringValue()
-		// convering the iteration number from string to int
-		triviaNumbersInt, _ = strconv.Atoi(triviaNumbers)
-		// initiating iteration as one
+		triviaNumbersInt = i.ApplicationCommandData().Options[0].IntValue()
+		// initiating iteration
 		triviaNumbIteration = 1
 		numCorrectAns = 0
 
@@ -186,7 +183,7 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				}
 				triviaNumbIteration++
 			} else {
-				endOfTrivia := fmt.Sprintf("That was the end of trivia questions. You got %d out of %d correctly.", numCorrectAns, triviaNumbersInt)
+				endOfTrivia := fmt.Sprintf("That was the end of trivia questions. You got %d out of %d correctly!", numCorrectAns, triviaNumbersInt)
 				err := s.InteractionRespond(i.Interaction, util.MessageContentResponse(endOfTrivia))
 				if err != nil {
 					fmt.Println("Could not end the trivia", err.Error())
@@ -214,7 +211,7 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				}
 				triviaNumbIteration++
 			} else {
-				endOfTrivia := fmt.Sprintf("That was the end of trivia questions. You got %d out of %d correctly.", numCorrectAns, triviaNumbersInt)
+				endOfTrivia := fmt.Sprintf("That was the end of trivia questions. You got %d out of %d correctly!", numCorrectAns, triviaNumbersInt)
 				err := s.InteractionRespond(i.Interaction, util.MessageContentResponse(endOfTrivia))
 				if err != nil {
 					fmt.Println("Could not end the trivia", err.Error())
