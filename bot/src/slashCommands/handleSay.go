@@ -16,7 +16,9 @@ func SaySlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		response = "Say what?"
 	}
 
-	err := s.InteractionRespond(i.Interaction, util.MessageContentResponse(response))
+	s.ChannelMessageSend(i.ChannelID, response)
+
+	err := s.InteractionRespond(i.Interaction, util.MessageContentResponseEphemeral("OK!"))
 	if err != nil {
 		log.Fatal("could not fetch any jokes.", err)
 	}

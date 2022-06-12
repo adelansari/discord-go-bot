@@ -59,6 +59,17 @@ func MessageContentResponse(c string) *discordgo.InteractionResponse {
 	}
 }
 
+// Responding to interaction with a message Ephemeral
+func MessageContentResponseEphemeral(c string) *discordgo.InteractionResponse {
+	return &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Content: c,
+			Flags:   uint64(discordgo.MessageFlagsEphemeral),
+		},
+	}
+}
+
 func JokeApiData(category string, limit string) []byte {
 	ninjaToken := os.Getenv("APININJAKEY")
 	url := apiLink + category + dataLimit + limit

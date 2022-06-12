@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html"
+	"strconv"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -22,11 +23,14 @@ type triviaApi struct {
 }
 
 var (
-	correctAnswer string
-	allAnswers    []string
-	triviaBtn     []string
-	btnEmoji      []string
-	question      string
+	correctAnswer       string
+	allAnswers          []string
+	triviaBtn           []string
+	btnEmoji            []string
+	question            string
+	triviaNumbersInt    int
+	triviaNumbIteration int
+	numCorrectAns       int
 )
 
 func createQuestion(s *discordgo.Session, i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
@@ -97,6 +101,14 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	switch i.Type {
 	case discordgo.InteractionApplicationCommand:
 
+		// retreiving the trivia iteration number:
+		triviaNumbers := i.ApplicationCommandData().Options[0].StringValue()
+		// convering the iteration number from string to int
+		triviaNumbersInt, _ = strconv.Atoi(triviaNumbers)
+		// initiating iteration as one
+		triviaNumbIteration = 1
+		numCorrectAns = 0
+
 		err := s.InteractionRespond(i.Interaction, createQuestion(s, i))
 		if err != nil {
 			fmt.Println("Could not send the trivia question", err.Error())
@@ -151,7 +163,9 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		}
 
 		var btnResp string
+
 		if btnCustomIDIndex == correctAnswerIndex {
+			numCorrectAns++
 			btnResp = fmt.Sprintf("**"+question+"**"+"\n🎊 The correct answer was indeed %s.", correctAnswer)
 			s.ChannelMessageEditComplex(&discordgo.MessageEdit{
 				Content: &btnResp,
@@ -164,10 +178,21 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					},
 				},
 			})
-			err := s.InteractionRespond(i.Interaction, createQuestion(s, i))
-			if err != nil {
-				fmt.Println("Could not send the trivia question", err.Error())
+
+			if triviaNumbIteration < triviaNumbersInt {
+				err := s.InteractionRespond(i.Interaction, createQuestion(s, i))
+				if err != nil {
+					fmt.Println("Could not send the trivia question", err.Error())
+				}
+				triviaNumbIteration++
+			} else {
+				endOfTrivia := fmt.Sprintf("That was the end of trivia questions. You got %d out of %d correctly.", numCorrectAns, triviaNumbersInt)
+				err := s.InteractionRespond(i.Interaction, util.MessageContentResponse(endOfTrivia))
+				if err != nil {
+					fmt.Println("Could not end the trivia", err.Error())
+				}
 			}
+
 		} else {
 			btnResp = fmt.Sprintf("**"+question+"**"+"\n%s is incorrect unfortunately. 😞", allAnswers[btnCustomIDIndex])
 			s.ChannelMessageEditComplex(&discordgo.MessageEdit{
@@ -181,9 +206,19 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					},
 				},
 			})
-			err := s.InteractionRespond(i.Interaction, createQuestion(s, i))
-			if err != nil {
-				fmt.Println("Could not send the trivia question", err.Error())
+
+			if triviaNumbIteration < triviaNumbersInt {
+				err := s.InteractionRespond(i.Interaction, createQuestion(s, i))
+				if err != nil {
+					fmt.Println("Could not send the trivia question", err.Error())
+				}
+				triviaNumbIteration++
+			} else {
+				endOfTrivia := fmt.Sprintf("That was the end of trivia questions. You got %d out of %d correctly.", numCorrectAns, triviaNumbersInt)
+				err := s.InteractionRespond(i.Interaction, util.MessageContentResponse(endOfTrivia))
+				if err != nil {
+					fmt.Println("Could not end the trivia", err.Error())
+				}
 			}
 		}
 	}

@@ -98,7 +98,7 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 						Type:        discordgo.ApplicationCommandOptionString,
 						Name:        "stuff",
 						Description: "Stuff to say",
-						Required:    false,
+						Required:    true,
 					},
 				},
 			},
@@ -125,6 +125,14 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 			ApplicationCommand: &discordgo.ApplicationCommand{
 				Name:        "trivia",
 				Description: "Displays a multiple choice trivia questions from General Knowledge category.",
+				Options: []*discordgo.ApplicationCommandOption{
+					{
+						Type:        discordgo.ApplicationCommandOptionString,
+						Name:        "number",
+						Description: "Number of trivia questions?",
+						Required:    true,
+					},
+				},
 			},
 		},
 		{
