@@ -135,3 +135,9 @@ func getFromUrl(req *http.Request) []byte {
 
 	return bodyBytes
 }
+
+func handleError(err error, errorMessage string) {
+	if err != nil {
+		fmt.Println(errorMessage, err.Error())
+	}
+}

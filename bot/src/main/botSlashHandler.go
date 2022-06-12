@@ -3,6 +3,7 @@ package bot
 import (
 	"discord-go-bot/bot/src/commands"
 	slash "discord-go-bot/bot/src/slashCommands"
+	music "discord-go-bot/bot/src/slashCommands/music"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -45,6 +46,10 @@ func (scmSlash *SlashFeature) MagicBall(s *discordgo.Session, i *discordgo.Inter
 
 func (scmSlash *SlashFeature) Trivia(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	slash.TriviaSlash(s, i)
+}
+
+func (scmSlash *SlashFeature) Music(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	music.MusicSlash(s, i)
 }
 
 // func (scmSlash *SlashFeature) TriviaComponent(s *discordgo.Session, i *discordgo.InteractionCreate) {

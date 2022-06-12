@@ -127,6 +127,10 @@ func Start() {
 
 }
 
+func BotSession() *discordgo.Session {
+	return goBot
+}
+
 // Slash handler by sid:
 
 // func slashHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
