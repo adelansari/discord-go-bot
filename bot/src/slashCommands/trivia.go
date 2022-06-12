@@ -102,14 +102,24 @@ func TriviaSlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 		// retreiving the trivia iteration number:
 		triviaNumbersInt = i.ApplicationCommandData().Options[0].IntValue()
-		// initiating iteration
-		triviaNumbIteration = 1
-		numCorrectAns = 0
 
-		err := s.InteractionRespond(i.Interaction, createQuestion(s, i))
-		if err != nil {
-			fmt.Println("Could not send the trivia question", err.Error())
+		if (triviaNumbersInt <= 0) || (triviaNumbersInt > 20) {
+			endOfTrivia := fmt.Sprintf("Please enter a valid number between 1 and 100")
+			err := s.InteractionRespond(i.Interaction, util.MessageContentResponse(endOfTrivia))
+			if err != nil {
+				fmt.Println("Could not end the trivia", err.Error())
+			}
+		} else {
+			// initiating iteration
+			triviaNumbIteration = 1
+			numCorrectAns = 0
+
+			err := s.InteractionRespond(i.Interaction, createQuestion(s, i))
+			if err != nil {
+				fmt.Println("Could not send the trivia question", err.Error())
+			}
 		}
+
 	case discordgo.InteractionMessageComponent:
 
 		//s.ChannelMessageDelete(i.ChannelID, i.Message.ID)

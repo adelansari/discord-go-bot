@@ -129,7 +129,7 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 					{
 						Type:        discordgo.ApplicationCommandOptionInteger,
 						Name:        "number",
-						Description: "Number of trivia questions?",
+						Description: "Question limit? enter number between 1 and 20",
 						Required:    true,
 					},
 				},
