@@ -119,22 +119,22 @@ func slashCommandFeatures(featurePointer *[]*scm.Feature) {
 				},
 			},
 		},
-		{
-			Type:    appInteraction,
-			Handler: scmSlash.MagicBall,
-			ApplicationCommand: &discordgo.ApplicationCommand{
-				Name:        "music",
-				Description: "Play Music!",
-				Options: []*discordgo.ApplicationCommandOption{
-					{
-						Type:        discordgo.ApplicationCommandOptionString,
-						Name:        "play-url",
-						Description: "Play music with a youtube link",
-						Required:    true,
-					},
-				},
-			},
-		},
+		// {
+		// 	Type:    appInteraction,
+		// 	Handler: scmSlash.MagicBall,
+		// 	ApplicationCommand: &discordgo.ApplicationCommand{
+		// 		Name:        "music",
+		// 		Description: "Play Music!",
+		// 		Options: []*discordgo.ApplicationCommandOption{
+		// 			{
+		// 				Type:        discordgo.ApplicationCommandOptionString,
+		// 				Name:        "play-url",
+		// 				Description: "Play music with a youtube link",
+		// 				Required:    true,
+		// 			},
+		// 		},
+		// 	},
+		// },
 		{
 			Type:    appInteraction,
 			Handler: scmSlash.Trivia,

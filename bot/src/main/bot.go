@@ -3,6 +3,8 @@ package bot
 import (
 	// importing commands pachage
 
+	"discord-go-bot/bot/src/context"
+	music "discord-go-bot/bot/src/slashCommands/music"
 	"flag"
 	"fmt" //	to print errors
 	"log"
@@ -17,10 +19,10 @@ import (
 
 var (
 	BotId          string
-	goBot          *discordgo.Session
 	GuildID        = flag.String("guild", "", "Test guild ID. If not passed - bot registers commands globally")
 	BotToken       = flag.String("token", "", "Bot access token")
 	RemoveCommands = flag.Bool("rmcmd", true, "Remove all commands after shutdowning or not")
+	scmSlash       *SlashFeature
 )
 
 type SlashFeature struct {
@@ -31,8 +33,6 @@ type SlashFeature struct {
 }
 
 func Start() {
-
-	// Testing if replit is running two instances
 
 	// load .env file
 	err := godotenv.Load(".env")
@@ -45,44 +45,24 @@ func Start() {
 	// 	log.Fatal("Bot token was not found.")
 	// }
 
-	//creating new bot session
-	goBot, err := discordgo.New("Bot " + Token)
-	//Handling error
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	// Making our bot a user using User function .
-	u, err := goBot.User("@me")
-	//Handlinf error
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	// Storing our id from u to BotId .
-	BotId = u.ID
+	context.Initialize(Token)
 
 	// Adding handler function to handle our messages using AddHandler from discordgo package.
 
-	goBot.AddHandler(messageHandler)
-	// goBot.AddHandler(slashHandler)   //  slash hander if needed
+	context.GoBot.AddHandler(messageHandler)
 
 	// Letting the bot have all intents because why not.
-	goBot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsAll)
+	context.GoBot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsAll)
 
-	err = goBot.Open()
-	//Error handling
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
+	// opening discord connection
+	context.OpenConnection()
 
 	// Creating slash commands with SCM
 
-	scmSlash := &SlashFeature{}
+	scmSlash = &SlashFeature{}
 	scmSlash.Token = Token
 	scmSlash.Guild = *GuildID
-	scmSlash.Session = goBot
+	scmSlash.Session = context.GoBot
 	// creating scm manager
 	scmSlash.Manager = scm.NewSCM()
 
@@ -96,26 +76,13 @@ func Start() {
 		log.Fatal("Failed to create slash commands.", err)
 	}
 
-	// Command handler by sid:
-
-	// command := &discordgo.ApplicationCommand{
-	// 	Name:        "ping",
-	// 	Type:        discordgo.ChatApplicationCommand,
-	// 	Description: "Ping me!",
-	// }
-
-	// //registeredCommand, err := discordgo.ApplicationCommandCreate(goBot.State.User.ID, *GuildID, command)
-	// registeredCommand, err := goBot.ApplicationCommandCreate(goBot.State.User.ID, *GuildID, command)
-	// if err != nil {
-	// 	fmt.Println(registeredCommand)
-	// 	log.Panicf("Cannot create '%v' command: %v", command.Name, err)
-	// }
-
 	//If every thing works fine we will be printing this.
 	fmt.Println("Bot is running !")
 
+	music.InitializeRoutine()
+
 	// Cleanly close down the Discord session.
-	defer goBot.Close()
+	defer context.GoBot.Close()
 
 	stop := make(chan os.Signal, 1)
 	// signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
@@ -126,27 +93,3 @@ func Start() {
 	// signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 
 }
-
-func BotSession() *discordgo.Session {
-	return goBot
-}
-
-// Slash handler by sid:
-
-// func slashHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
-
-// 	if i.Type != discordgo.InteractionApplicationCommand {
-// 		return
-// 	}
-
-// 	data := i.ApplicationCommandData()
-// 	switch data.Name {
-// 	case "ping":
-// 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-// 			Type: discordgo.InteractionResponseChannelMessageWithSource,
-// 			Data: &discordgo.InteractionResponseData{
-// 				Content: fmt.Sprintf("Pong!"),
-// 			},
-// 		})
-// 	}
-// }

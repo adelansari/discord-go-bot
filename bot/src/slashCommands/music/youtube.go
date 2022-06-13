@@ -4,12 +4,17 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
 
 	"github.com/bwmarrin/discordgo"
 )
+
+// youtube api call
+var youtubeKey string
 
 //	youtubeSearchEndpoint contains YouTube endpoint for searching after a video
 const youtubeSearchEndpoint string = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key="
@@ -51,12 +56,17 @@ type itemsFind struct {
 }
 
 func ytSearch(name string) (string, string, error) {
+	youtubeKey = os.Getenv("YOUTUBEAPI")
 
-	res, err := http.Get(youtubeSearchEndpoint + GetYoutubeKey() + "&q=" + name)
+	res, err := http.Get(youtubeSearchEndpoint + youtubeKey + "&q=" + name)
 	if err != nil {
 		log.Println(http.StatusServiceUnavailable)
 		return "", "", err
 	}
+
+	// body, err := io.ReadAll(res.Body)
+
+	// fmt.Println(string(body))
 
 	var page ytPageSearch
 
@@ -76,11 +86,15 @@ func ytSearch(name string) (string, string, error) {
 	videoId := page.Items[0].Id.VideoId
 	videoTitle := page.Items[0].Snippet.Title
 
+	fmt.Println("videoId", videoId)
+	fmt.Println("videoTitle", videoTitle)
+
 	return videoId, videoTitle, nil
 }
 
 func ytFind(videoId string) (string, error) {
-	res, err := http.Get(youtubeFindEndpoint + GetYoutubeKey() + "&id=" + videoId)
+	youtubeKey = os.Getenv("YOUTUBEAPI")
+	res, err := http.Get(youtubeFindEndpoint + youtubeKey + "&id=" + videoId)
 	if err != nil {
 		log.Println(http.StatusServiceUnavailable)
 		return "", err

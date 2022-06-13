@@ -2,6 +2,7 @@ package bot
 
 import (
 	"discord-go-bot/bot/src/commands"
+	music "discord-go-bot/bot/src/slashCommands/music"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -11,6 +12,7 @@ import (
 func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	BotPrefix := "."
+	v := music.VoiceInstances[m.GuildID]
 
 	// Split the user message around each instance of one or more consecutive white space characters
 	messageSentFull := strings.Fields(m.Content)
@@ -50,6 +52,18 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 			commands.Facts(s, m)
 		case BotPrefix + "factstimer":
 			commands.FactsTimer(s, m)
+		case BotPrefix + "play":
+			if len(messageSentFull) > 1 {
+				music.PlayMusic(messageSentFull[1:], v, s, m)
+			} else {
+				s.ChannelMessageSend(m.ChannelID, "Type the song name after the command.")
+			}
+		case BotPrefix + "leave":
+			music.LeaveVoice(v, m)
+		case BotPrefix + "skip":
+			music.SkipMusic(v, m)
+		case BotPrefix + "stop":
+			music.StopMusic(v, m)
 		case "hi":
 			s.ChannelMessageSend(m.ChannelID, "Hello!")
 		case "hello":
