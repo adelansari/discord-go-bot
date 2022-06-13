@@ -27,6 +27,7 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 			"`.stop`   -   Stops the music in the voice channel\n"+
 			"`.leave`   -  Leaves the voice channel.\n"+
 			"`.skip`   -  Skips the current music in the queue.\n"+
+			"`.queue`  -  Displays the music queue.\n"+
 
 			"\nMisc. Commands:\n"+
 			"`.ping`    -  To ping the bot!\n"+

@@ -3,6 +3,7 @@ package music
 import (
 	"log"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -188,4 +189,21 @@ func StopMusic(v *VoiceInstance, m *discordgo.MessageCreate) {
 	v.Stop()
 	log.Println("INFO: The bot stopped playing music")
 	SendChannelMessage(m.ChannelID, "**[Music]** I have now stopped playing music!")
+}
+
+func MusicQueue(v *VoiceInstance, m *discordgo.MessageCreate) {
+	log.Println("INFO:", m.Author.Username, "requested music queue")
+	var queue string
+	if len(v.queue) > 0 {
+		for index, element := range v.queue {
+			queue += strconv.Itoa(index+1) + ". " + element.Title + "\n"
+		}
+		SendChannelMessageEmbed(m.ChannelID, &discordgo.MessageEmbed{
+			Title:       "Current Music Queue",
+			Description: queue,
+		})
+	} else {
+		SendChannelMessage(m.ChannelID, "**[Music]** Queue is empty!")
+	}
+
 }

@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/bwmarrin/discordgo"
 	"github.com/getsentry/sentry-go"
 )
 
@@ -31,6 +32,13 @@ func SearchVoiceChannel(user string) (voiceChannelID string) {
 // SendChannelMessage sends a channel message to channel with channel id equal to m.ChannelID
 func SendChannelMessage(channelID string, message string) {
 	_, err := context.GoBot.ChannelMessageSend(channelID, message)
+	if err != nil {
+		sentry.CaptureException(err)
+	}
+}
+
+func SendChannelMessageEmbed(channelID string, embed *discordgo.MessageEmbed) {
+	_, err := context.GoBot.ChannelMessageSendEmbed(channelID, embed)
 	if err != nil {
 		sentry.CaptureException(err)
 	}

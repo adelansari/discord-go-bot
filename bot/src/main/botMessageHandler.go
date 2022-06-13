@@ -64,6 +64,8 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 			music.SkipMusic(v, m)
 		case BotPrefix + "stop":
 			music.StopMusic(v, m)
+		case BotPrefix + "queue":
+			music.MusicQueue(v, m)
 		case "hi":
 			s.ChannelMessageSend(m.ChannelID, "Hello!")
 		case "hello":

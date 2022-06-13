@@ -55,6 +55,7 @@ Music Commands:
 .stop       -   Stops the music in the voice channel
 .leave      -   Leaves the voice channel
 .skip       -   Skips the current music in the queue
+.queue      -   Displays the music queue
 
 Misc. Commands:
 .ping       -  To ping the bot!
