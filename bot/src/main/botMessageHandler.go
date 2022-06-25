@@ -74,6 +74,10 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 			s.ChannelMessageSend(m.ChannelID, "Sayonara 👋")
 		}
 
+		if strings.Contains(messageFirstField, "twitter.com") {
+			commands.LinkEmbed(s, m)
+		}
+
 	}
 
 }
