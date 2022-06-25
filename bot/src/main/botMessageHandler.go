@@ -75,7 +75,7 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 
 		if strings.Contains(messageFirstField, "twitter.com") {
-			commands.LinkEmbed(s, m)
+			commands.TwitterEmbed(s, m)
 		}
 
 	}

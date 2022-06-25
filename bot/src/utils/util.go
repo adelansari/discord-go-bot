@@ -12,10 +12,12 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-const apiLink = "https://api.api-ninjas.com/v1/"
-const dataLimit = "?limit="
-const memeApiLink = "https://meme-api.herokuapp.com/gimme"
-const triviaApiLink = "https://opentdb.com/api.php?amount=1&category=9&type=multiple"
+const (
+	apiLink       = "https://api.api-ninjas.com/v1/"
+	dataLimit     = "?limit="
+	memeApiLink   = "https://meme-api.herokuapp.com/gimme"
+	triviaApiLink = "https://opentdb.com/api.php?amount=1&category=9&type=multiple"
+)
 
 // JSON pretty print by marshaling value
 func PrettyStruct(data interface{}) (string, error) {
