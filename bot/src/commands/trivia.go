@@ -66,7 +66,7 @@ func Trivia(s *discordgo.Session, m *discordgo.MessageCreate) {
 			},
 			Label:    element,
 			Style:    discordgo.SecondaryButton,
-			CustomID: "buttonIndex_" + fmt.Sprintf("%d", index),
+			CustomID: "triviaIndex_" + fmt.Sprintf("%d", index),
 		}
 		components = append(components, btn)
 	}

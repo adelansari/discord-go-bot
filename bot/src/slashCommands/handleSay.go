@@ -20,6 +20,6 @@ func SaySlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 	err := s.InteractionRespond(i.Interaction, util.MessageContentResponseEphemeral("OK!"))
 	if err != nil {
-		log.Fatal("could not fetch any jokes.", err)
+		log.Fatal("could not send the OK confirmation message.", err)
 	}
 }

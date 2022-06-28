@@ -32,6 +32,7 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 			"\nMisc. Commands:\n"+
 			"`.ping`    -  To ping the bot!\n"+
 			"`.pong`    -  To pong the bot!\n"+
+			"`.say`    	-  To repeat what the user says (allows gif emote usage)!\n"+
 			"`.invite`  -  To invite the bot to your server!\n") +
 
 			"\nPS: All these commands work with slash commands `/` as well.\n",
