@@ -95,8 +95,6 @@ func TwitterEmbed(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 		// it will get the last video url from above iteration
 
-		TweetHyperlink := fmt.Sprintf("[](%s)", TweetVideoUrl)
-
 		// twitterEmbed := &discordgo.MessageEmbed{
 		// 	URL:   TweetVideoUrl,
 		// 	Title: "Tweet Video",
@@ -105,8 +103,7 @@ func TwitterEmbed(s *discordgo.Session, m *discordgo.MessageCreate) {
 		// s.ChannelMessageSend(m.ChannelID, twittertweet.Video.Poster)
 		// s.ChannelMessageSend(m.ChannelID, TweetHyperlink)
 
-		fmt.Println(m.Reference())
-		s.ChannelMessageSendReply(m.ChannelID, TweetHyperlink, m.Reference())
+		s.ChannelMessageSendReply(m.ChannelID, TweetVideoUrl, m.Reference())
 
 		// s.ChannelMessageSendEmbed(m.ChannelID, twitterEmbed)
 
