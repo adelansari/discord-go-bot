@@ -90,9 +90,15 @@ func TwitterEmbed(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Tweet Video
 	if twittertweet.Video.Poster != "" {
 		var TweetVideoUrl string
+		var TweetVideoUrlArray []string
 		for _, rec := range twittertweet.Video.Variants {
-			TweetVideoUrl = rec.Src
+			if rec.Type == "video/mp4" {
+				TweetVideoUrl = rec.Src
+				TweetVideoUrlArray = append(TweetVideoUrlArray, TweetVideoUrl)
+			}
+
 		}
+		fmt.Println(TweetVideoUrlArray)
 		// it will get the last video url from above iteration
 
 		// twitterEmbed := &discordgo.MessageEmbed{
