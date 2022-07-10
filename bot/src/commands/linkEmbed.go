@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os/exec"
+	"strconv"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -93,12 +94,33 @@ func TwitterEmbed(s *discordgo.Session, m *discordgo.MessageCreate) {
 		var TweetVideoUrlArray []string
 		for _, rec := range twittertweet.Video.Variants {
 			if rec.Type == "video/mp4" {
-				TweetVideoUrl = rec.Src
+				TweetVideoUrl = rec.Src // extracts the tweet's video url
+				// example: TweetVideoUrl = https://video.twimg.com/ext_tw_video/1509254452771180544/pu/vid/636x360/b7M9tFbsm4TPuRge.mp4?tag=12
 				TweetVideoUrlArray = append(TweetVideoUrlArray, TweetVideoUrl)
 			}
 
 		}
-		fmt.Println(TweetVideoUrlArray)
+
+		var resolutionArray []int
+		for _, videoUrl := range TweetVideoUrlArray {
+			//
+			videoLinkSplit := strings.Split(videoUrl, "/")
+			videoResolution := videoLinkSplit[7] // it will get 636x360
+			videoResSplit := strings.Split(videoResolution, "x")
+			resolution, _ := strconv.Atoi(videoResSplit[0])       // convert string to integer
+			resolutionArray = append(resolutionArray, resolution) // append all resolutions with type integer into an array
+		}
+
+		// initializing the highest video resolution as the first element
+		var videoIndex int
+		highestRes := resolutionArray[0]
+		for i, videoUrl := range resolutionArray {
+			if highestRes < videoUrl {
+				highestRes = videoUrl
+				videoIndex = i
+			}
+		}
+
 		// it will get the last video url from above iteration
 
 		// twitterEmbed := &discordgo.MessageEmbed{
@@ -109,7 +131,7 @@ func TwitterEmbed(s *discordgo.Session, m *discordgo.MessageCreate) {
 		// s.ChannelMessageSend(m.ChannelID, twittertweet.Video.Poster)
 		// s.ChannelMessageSend(m.ChannelID, TweetHyperlink)
 
-		s.ChannelMessageSendReply(m.ChannelID, TweetVideoUrl, m.Reference())
+		s.ChannelMessageSendReply(m.ChannelID, TweetVideoUrlArray[videoIndex], m.Reference())
 
 		// s.ChannelMessageSendEmbed(m.ChannelID, twitterEmbed)
 
