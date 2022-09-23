@@ -11,8 +11,10 @@ require (
 )
 
 require (
+	github.com/forPelevin/gomoji v1.1.6 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/jonas747/ogg v0.0.0-20161220051205-b4f6f4cf3757 // indirect
+	github.com/rivo/uniseg v0.4.2 // indirect
 	golang.org/x/crypto v0.0.0-20220518034528-6f7dac969898 // indirect
 	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 )

@@ -73,6 +73,7 @@ func GiveawaySlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 			// Preparing emotes
 			allReactions := fetchedMessage.Reactions // all reaction emotes on a certain message
+
 			reactionEmotes := []string{}
 			emotesFormated := []string{}
 
@@ -103,10 +104,8 @@ func GiveawaySlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 					// winner message corresponding to the emote:
 					winnerMessage := "The winner for " + emotesFormated[iteration1] + " reaction is " + userPick
-					err := s.InteractionRespond(i.Interaction, util.MessageContentResponse(winnerMessage))
-					if err != nil {
-						log.Fatal("could not fetch any jokes.", err)
-					}
+					s.InteractionRespond(i.Interaction, util.MessageContentResponse(winnerMessage))
+
 				} else {
 					_ = s.InteractionRespond(
 						i.Interaction,
@@ -114,6 +113,7 @@ func GiveawaySlash(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					)
 				}
 			}
+
 		}
 	}
 }

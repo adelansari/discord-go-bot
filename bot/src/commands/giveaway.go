@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/forPelevin/gomoji"
 )
 
 // func GiveawayExport() {
@@ -33,6 +34,11 @@ func Giveaway(s *discordgo.Session, m *discordgo.MessageCreate) {
 					Value: "To pick a winner from the giveaway with the Message ID.\n" +
 						"Example:\n*.giveaway pick 978202141602742302*",
 				},
+				{
+					Name: "\n`.giveaway react MessageID`",
+					Value: "To add reactions to the message based on emojis in the message content.\n" +
+						"Example:\n*.giveaway react 978202141602742302*",
+				},
 			},
 			Color: 9589448, // hex color to decimal
 		}
@@ -46,6 +52,8 @@ func Giveaway(s *discordgo.Session, m *discordgo.MessageCreate) {
 			GiveawayCreate(s, m)
 		case "pick":
 			PickWinner(s, m)
+		case "react":
+			ReactToMessage(s, m)
 		}
 	}
 
@@ -117,6 +125,7 @@ func PickWinner(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// Preparing emotes
 	allReactions := fetchedMessage.Reactions // all reaction emotes on a certain message
+	fmt.Println(allReactions)
 	reactionEmotes := []string{}
 	emotesFormated := []string{}
 	// fetchedUsers := []string{}
@@ -154,6 +163,74 @@ func PickWinner(s *discordgo.Session, m *discordgo.MessageCreate) {
 				m.ChannelID,
 				"The message author reaction does not count.",
 			)
+		}
+	}
+}
+
+func ReactToMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
+
+	// To save emojis from message content and then react to the message with all
+	messageSentFull := strings.Fields(m.Content)
+	// the message ID inputted by the user
+	messageIDField := strings.ToLower(messageSentFull[2])
+
+	// Getting a the message by ID
+	fetchedMessage, err := s.ChannelMessage(m.ChannelID, messageIDField)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	fmt.Println(fetchedMessage)
+	// All custom emojis
+	customEmoji := fetchedMessage.GetCustomEmojis()
+
+	customEmojiContent := []string{}
+	customEmojiFormated := []string{}
+
+	if len(customEmoji) != 0 {
+		for i := range customEmoji {
+			// formatting emojis:
+			customEmojiContent = append(customEmojiContent, customEmoji[i].Name+":"+customEmoji[i].ID)
+			customEmojiFormated = append(customEmojiFormated, "<:"+customEmojiContent[i]+">")
+		}
+	}
+
+	// All unicode emojis
+	unicodeEmoji := gomoji.FindAll(fetchedMessage.Content)
+
+	unicodeEmojiContent := []string{}
+	for j := range unicodeEmoji {
+		unicodeEmojiContent = append(unicodeEmojiContent, unicodeEmoji[j].Character)
+	}
+
+	// All emojis
+	allEmojis := append(customEmojiContent, unicodeEmojiContent...)
+	fmt.Println(allEmojis)
+
+	// Sorting Emojis based on order of occurance
+
+	fetchedMsgFields := strings.Fields(fetchedMessage.Content)
+
+	emojiSorting := []string{}
+
+	for _, messageFields := range fetchedMsgFields {
+		for _, emojis := range allEmojis {
+			if strings.Contains(messageFields, emojis) == true {
+				emojiSorting = append(emojiSorting, emojis)
+			}
+		}
+	}
+
+	fmt.Println(emojiSorting)
+
+	// Adding emojis
+
+	for _, emoji := range emojiSorting {
+		err = s.MessageReactionAdd(m.ChannelID, messageIDField, emoji)
+		if err != nil {
+			fmt.Println(err.Error())
+			return
 		}
 	}
 
