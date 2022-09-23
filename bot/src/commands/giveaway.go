@@ -181,18 +181,15 @@ func ReactToMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	fmt.Println(fetchedMessage)
 	// All custom emojis
 	customEmoji := fetchedMessage.GetCustomEmojis()
 
 	customEmojiContent := []string{}
-	customEmojiFormated := []string{}
 
 	if len(customEmoji) != 0 {
 		for i := range customEmoji {
 			// formatting emojis:
 			customEmojiContent = append(customEmojiContent, customEmoji[i].Name+":"+customEmoji[i].ID)
-			customEmojiFormated = append(customEmojiFormated, "<:"+customEmojiContent[i]+">")
 		}
 	}
 
@@ -206,7 +203,6 @@ func ReactToMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// All emojis
 	allEmojis := append(customEmojiContent, unicodeEmojiContent...)
-	fmt.Println(allEmojis)
 
 	// Sorting Emojis based on order of occurance
 
@@ -221,8 +217,6 @@ func ReactToMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 		}
 	}
-
-	fmt.Println(emojiSorting)
 
 	// Adding emojis
 
