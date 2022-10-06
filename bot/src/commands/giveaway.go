@@ -120,8 +120,8 @@ func PickWinner(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	// Bot or the message author's name
-	botUsername := fetchedMessage.Author.Username
+	// The message author's name
+	authorUsername := fetchedMessage.Author.Username
 
 	// Preparing emotes
 	allReactions := fetchedMessage.Reactions // all reaction emotes on a certain message
@@ -146,7 +146,7 @@ func PickWinner(s *discordgo.Session, m *discordgo.MessageCreate) {
 		// filtering out the bot or the message author's name
 		reactionUsersFiltered := []*discordgo.User{}
 		for j := range reactionUsers {
-			if reactionUsers[j].Username != botUsername {
+			if reactionUsers[j].Username != authorUsername && reactionUsers[j].Username != s.State.User.Username {
 				reactionUsersFiltered = append(reactionUsersFiltered, reactionUsers[j])
 			}
 		}
@@ -161,7 +161,7 @@ func PickWinner(s *discordgo.Session, m *discordgo.MessageCreate) {
 		} else {
 			s.ChannelMessageSend(
 				m.ChannelID,
-				"The message author reaction does not count.",
+				"The message author/bot reaction does not count.",
 			)
 		}
 	}
